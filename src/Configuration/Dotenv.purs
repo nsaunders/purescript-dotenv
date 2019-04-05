@@ -42,7 +42,7 @@ parseConfig
 parseConfig config =
   case runParser config configParser of
     Left err ->
-      throwError $ error $ show err <> config
+      throwError $ error $ "Failed to parse settings. " <> show err
     Right settings ->
       pure settings
 
