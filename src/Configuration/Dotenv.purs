@@ -23,14 +23,12 @@ type Settings = List Setting
 loadFile
   :: forall m
    . MonadAff m
-  => MonadThrow Error m
   => m Settings
-loadFile = readConfig >>= parseConfig >>= applySettings
+loadFile = readConfig >>= (liftAff <<< parseConfig) >>= applySettings
 
 readConfig
   :: forall m
    . MonadAff m
-  => MonadThrow Error m
   => m String
 readConfig = liftAff $ readTextFile UTF8 ".env"
 
