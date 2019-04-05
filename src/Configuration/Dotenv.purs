@@ -16,11 +16,15 @@ import Node.FS.Aff (readTextFile)
 import Node.Process (lookupEnv, setEnv)
 import Text.Parsing.Parser (runParser)
 
+type Setting = Tuple String String
+
+type Settings = List Setting
+
 loadFile
   :: forall m
    . MonadAff m
   => MonadThrow Error m
-  => m (List (Tuple String String))
+  => m Settings
 loadFile = readConfig >>= parseConfig >>= applySettings
 
 readConfig
@@ -34,7 +38,7 @@ parseConfig
   :: forall m
    . MonadThrow Error m
   => String
-  -> m (List (Tuple String String))
+  -> m Settings
 parseConfig config =
   case runParser config configParser of
     Left err ->
@@ -45,15 +49,15 @@ parseConfig config =
 applySettings
   :: forall m
    . MonadAff m
-  => List (Tuple String String)
+  => Settings
   -> m (List (Tuple String String))
 applySettings = traverse applySetting
 
 applySetting
   :: forall m
    . MonadAff m
-  => Tuple String String
-  -> m (Tuple String String)
+  => Setting
+  -> m Setting
 applySetting setting@(Tuple key value) = liftEffect (lookupEnv key) >>=
   case _ of
     Nothing ->
