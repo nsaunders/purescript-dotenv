@@ -3,7 +3,7 @@ module Configuration.Dotenv where
 import Prelude
 import Configuration.Dotenv.Parse (configParser)
 import Control.Monad.Error.Class (class MonadThrow, throwError)
-import Data.Either (Either(..))
+import Data.Either (either)
 import Data.List (List)
 import Data.Maybe (Maybe(..))
 import Data.Traversable (traverse)
@@ -37,12 +37,7 @@ parseConfig
    . MonadThrow Error m
   => String
   -> m Settings
-parseConfig config =
-  case runParser config configParser of
-    Left err ->
-      throwError $ error $ "Failed to parse settings. " <> show err
-    Right settings ->
-      pure settings
+parseConfig = either (throwError <<< error <<< append "Invalid .env file " <<< show) pure <<< flip runParser configParser
 
 applySettings
   :: forall m
