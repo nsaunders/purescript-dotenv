@@ -16,7 +16,7 @@ main = run [consoleReporter] do
   describe "loadFile" do
      it "should apply settings from .env" $
        Dotenv.loadFile *> liftEffect (lookupEnv "ONE") >>= shouldEqual (Just "hello")
-     it "should not replace runtime environment variables" do
+     it "should not replace existing environment variables" do
        liftEffect $ setEnv "TWO" "hello"
        _ <- Dotenv.loadFile
        two <- liftEffect (lookupEnv "TWO")
