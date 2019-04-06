@@ -37,7 +37,11 @@ parseConfig
    . MonadThrow Error m
   => String
   -> m Settings
-parseConfig = either (throwError <<< error <<< append "Invalid .env file " <<< show) pure <<< flip runParser configParser
+parseConfig =
+  either
+    (throwError <<< error <<< append "Invalid .env file " <<< show)
+    pure
+  <<< flip runParser configParser
 
 applySettings
   :: forall m
