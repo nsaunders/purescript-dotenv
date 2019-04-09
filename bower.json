@@ -1,5 +1,21 @@
 {
   "name": "purescript-node-dotenv",
+  "homepage": "https://github.com/nicholassaunders/purescript-node-dotenv",
+  "authors": [
+    "Nick Saunders <nick@saunde.rs>"
+  ],
+  "description": "Enables specification of environment variables in a .env file.",
+  "keywords": [
+    "purescript",
+    "dotenv",
+    "environment",
+    "configuration"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nicholassaunders/purescript-node-dotenv.git"
+  },
+  "license": "MIT",
   "ignore": [
     "**/.*",
     "node_modules",
