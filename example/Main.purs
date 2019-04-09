@@ -1,4 +1,4 @@
-module Main where
+module Example.Main where
 
 import Prelude
 import Configuration.Dotenv (loadFile) as Dotenv
