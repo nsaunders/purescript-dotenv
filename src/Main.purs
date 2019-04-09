@@ -1,9 +1,15 @@
 module Main where
 
 import Prelude
+import Configuration.Dotenv (loadFile) as Dotenv
 import Effect (Effect)
-import Effect.Console (log)
+import Effect.Aff (launchAff_)
+import Effect.Class (liftEffect)
+import Effect.Console (logShow)
+import Node.Process (lookupEnv)
 
 main :: Effect Unit
-main = do
-  log "Hello sailor!"
+main = launchAff_ do
+  _ <- Dotenv.loadFile
+  testVar <- liftEffect $ lookupEnv "TEST_VAR"
+  liftEffect $ logShow testVar
