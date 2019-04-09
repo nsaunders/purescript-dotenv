@@ -1,6 +1,6 @@
 -- | This is the base module for the Dotenv library.
 
-module Configuration.Dotenv (loadFile) where
+module Configuration.Dotenv (Setting, Settings, loadFile) where
 
 import Prelude
 import Configuration.Dotenv.Parse (configParser)
