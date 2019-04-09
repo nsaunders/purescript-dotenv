@@ -4,7 +4,7 @@ module Configuration.Dotenv (loadFile) where
 
 import Prelude
 import Configuration.Dotenv.Parse (configParser)
-import Control.Monad.Error.Class (class MonadThrow, throwError)
+import Control.Monad.Error.Class (class MonadThrow, catchError, throwError)
 import Data.Either (either)
 import Data.List (List)
 import Data.Maybe (Maybe(..))
@@ -37,6 +37,7 @@ readConfig
    . MonadAff m
   => m String
 readConfig = liftAff $ readTextFile UTF8 ".env"
+                     # flip catchError (const $ pure "")
 
 -- | Parses the contents of a `.env` file.
 parseConfig

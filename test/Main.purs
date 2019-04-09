@@ -29,3 +29,5 @@ main = run [consoleReporter] do
          _ <- Dotenv.loadFile
          two <- liftEffect (lookupEnv "TEST_TWO")
          two `shouldEqual` Just "hi"
+     it "should not throw an error when the .env file does not exist" $
+       Dotenv.loadFile *> pure unit
