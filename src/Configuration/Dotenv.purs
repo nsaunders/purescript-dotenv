@@ -1,4 +1,6 @@
-module Configuration.Dotenv where
+-- | This is the base module for the Dotenv library.
+
+module Configuration.Dotenv (loadFile) where
 
 import Prelude
 import Configuration.Dotenv.Parse (configParser)
@@ -16,22 +18,27 @@ import Node.FS.Aff (readTextFile)
 import Node.Process (lookupEnv, setEnv)
 import Text.Parsing.Parser (runParser)
 
+-- | A key-value pair representing an environment variable setting
 type Setting = Tuple String String
 
+-- | A series of environment variable settings
 type Settings = List Setting
 
+-- | Loads the `.env` file into the environment.
 loadFile
   :: forall m
    . MonadAff m
   => m Settings
 loadFile = readConfig >>= (liftAff <<< parseConfig) >>= applySettings
 
+-- | Reads the `.env` file.
 readConfig
   :: forall m
    . MonadAff m
   => m String
 readConfig = liftAff $ readTextFile UTF8 ".env"
 
+-- | Parses the contents of a `.env` file.
 parseConfig
   :: forall m
    . MonadThrow Error m
@@ -43,6 +50,7 @@ parseConfig =
     pure
   <<< flip runParser configParser
 
+-- | Applies the specified settings to the environment.
 applySettings
   :: forall m
    . MonadAff m
@@ -50,6 +58,7 @@ applySettings
   -> m (List (Tuple String String))
 applySettings = traverse applySetting
 
+-- | Applies the specified setting to the environment.
 applySetting
   :: forall m
    . MonadAff m
