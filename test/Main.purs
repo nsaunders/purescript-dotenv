@@ -22,13 +22,16 @@ setup = liftEffect $ rename ".env" ".env.bak"
 teardown :: Aff Unit
 teardown = liftEffect $ rename ".env.bak" ".env"
 
+writeConfig :: String -> Aff Unit
+writeConfig config = writeFile ".env" <=< liftEffect $ Buffer.fromString config UTF8
+
 main :: Effect Unit
 main = run [consoleReporter] do
   describe "loadFile" do
 
      it "should apply settings from .env" $ do
        setup
-       writeFile ".env" =<< liftEffect (Buffer.fromString "TEST_ONE=hello" UTF8)
+       writeConfig "TEST_ONE=hello"
        _ <- Dotenv.loadFile
        testOne <- liftEffect (lookupEnv "TEST_ONE")
        testOne `shouldEqual` (Just "hello")
@@ -36,7 +39,7 @@ main = run [consoleReporter] do
 
      it "should not replace existing environment variables" $ do
        setup
-       writeFile ".env" =<< liftEffect (Buffer.fromString "TEST_TWO=hi2" UTF8)
+       writeConfig "TEST_TWO=hi2"
        liftEffect $ setEnv "TEST_TWO" "hi"
        _ <- Dotenv.loadFile
        two <- liftEffect (lookupEnv "TEST_TWO")
