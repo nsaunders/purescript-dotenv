@@ -1,4 +1,4 @@
-# purescript-node-dotenv ![Build Status](https://img.shields.io/travis/nicholassaunders/purescript-node-dotenv.svg)
+# purescript-dotenv ![Build Status](https://img.shields.io/travis/nicholassaunders/purescript-dotenv.svg)
 ## Load environment variables from a ```.env``` file.
 
 This is a lightweight clone of various dotenv projects like
