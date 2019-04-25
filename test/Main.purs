@@ -29,22 +29,22 @@ main :: Effect Unit
 main = run [consoleReporter] do
   describe "loadFile" do
 
-     it "should apply settings from .env" $ do
-       setup
-       writeConfig "TEST_ONE=hello"
-       _ <- Dotenv.loadFile
-       testOne <- liftEffect (lookupEnv "TEST_ONE")
-       testOne `shouldEqual` (Just "hello")
-       # finally teardown
+    it "should apply settings from .env" $ do
+      setup
+      writeConfig "TEST_ONE=hello"
+      _ <- Dotenv.loadFile
+      testOne <- liftEffect (lookupEnv "TEST_ONE")
+      testOne `shouldEqual` (Just "hello")
+      # finally teardown
 
-     it "should not replace existing environment variables" $ do
-       setup
-       writeConfig "TEST_TWO=hi2"
-       liftEffect $ setEnv "TEST_TWO" "hi"
-       _ <- Dotenv.loadFile
-       two <- liftEffect (lookupEnv "TEST_TWO")
-       two `shouldEqual` Just "hi"
-       # finally teardown
+    it "should not replace existing environment variables" $ do
+      setup
+      writeConfig "TEST_TWO=hi2"
+      liftEffect $ setEnv "TEST_TWO" "hi"
+      _ <- Dotenv.loadFile
+      two <- liftEffect (lookupEnv "TEST_TWO")
+      two `shouldEqual` Just "hi"
+      # finally teardown
 
-     it "should not throw an error when the .env file does not exist" $
-       setup *> Dotenv.loadFile *> teardown
+    it "should not throw an error when the .env file does not exist" $
+      setup *> Dotenv.loadFile *> teardown
