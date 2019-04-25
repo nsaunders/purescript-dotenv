@@ -14,7 +14,6 @@ import Node.Process (lookupEnv, setEnv)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 import Test.Spec.Reporter.Console (consoleReporter)
-import Test.Spec.Runner (run)
 
 setup :: Aff Unit
 setup = liftEffect $ rename ".env" ".env.bak"
