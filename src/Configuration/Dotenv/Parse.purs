@@ -5,36 +5,46 @@ module Configuration.Dotenv.Parse (configParser) where
 import Prelude
 import Control.Alt ((<|>))
 import Data.Array (fromFoldable) as Array
-import Data.Array (many)
-import Data.List (List, catMaybes)
+import Data.Foldable (class Foldable)
+import Data.List (List)
 import Data.Tuple (Tuple(..))
 import Data.String.CodeUnits (fromCharArray) as String
 import Text.Parsing.Parser (Parser)
-import Text.Parsing.Parser.Combinators ((<?>), manyTill, optionMaybe, sepEndBy, skipMany)
-import Text.Parsing.Parser.String (anyChar, char, noneOf)
+import Text.Parsing.Parser.Combinators ((<?>), lookAhead, manyTill, notFollowedBy, sepEndBy, skipMany)
+import Text.Parsing.Parser.String (anyChar, char)
 
 -- | A `.env` file parser
 configParser :: Parser String (List (Tuple String String))
 configParser = do
-  skipMany comment
-  variables <- optionMaybe variable `sepEndBy` (eol *> skipMany comment)
-  pure $ catMaybes variables
+  skipMany ((comment *> pure unit) <|> eol)
+  variable `sepEndBy` (eol *> skipMany ((comment *> pure unit) <|> eol))
 
 -- | Parses the end of a line.
-eol :: Parser String Char
-eol = newline <|> crlf <?> "new-line"
+eol :: Parser String Unit
+eol = (newline <|> crlf <?> "newline") *> pure unit
   where
-    newline = char '\n' <?> "lf new-line"
-    crlf = char '\r' *> char '\n' <?> "crlf new-line"
+    newline = char '\n' <?> "lf newline"
+    crlf = char '\r' *> char '\n' <?> "crlf newline"
+
+-- | Parses the end of a file.
+eof :: Parser String Unit
+eof = notFollowedBy anyChar
+
+-- | Parses the remainder of the line.
+tillEnd :: Parser String String
+tillEnd = unfoldToString <$> manyTill anyChar (lookAhead eol <|> eof)
 
 -- | Parses a comment in the form of `# Comment`.
 comment :: Parser String String
-comment = char '#' *> ((String.fromCharArray <<< Array.fromFoldable) <$> manyTill anyChar eol)
+comment = char '#' *> tillEnd
 
 -- | Parses a variable in the form of `KEY=value`.
 variable :: Parser String (Tuple String String)
 variable = do
-  name <- String.fromCharArray <$> many (noneOf ['=', '\r', '\n'])
-  _ <- char '='
-  value <- String.fromCharArray <$> many (noneOf ['\r', '\n'])
+  name <- unfoldToString <$> manyTill anyChar (char '=')
+  value <- unfoldToString <$> manyTill anyChar (lookAhead eol <|> eof)
   pure $ Tuple name value
+
+-- | Creates a `String` from a character list.
+unfoldToString :: forall f. Foldable f => f Char -> String
+unfoldToString = String.fromCharArray <<< Array.fromFoldable
