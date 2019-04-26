@@ -3,7 +3,6 @@ module Test.Load where
 import Prelude
 import Configuration.Dotenv as Dotenv
 import Data.Maybe (Maybe(Just))
-import Effect (Effect)
 import Effect.Aff (Aff, finally)
 import Effect.Class (liftEffect)
 import Node.Buffer (fromString) as Buffer
@@ -13,7 +12,6 @@ import Node.FS.Sync (rename)
 import Node.Process (lookupEnv, setEnv)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
-import Test.Spec.Reporter.Console (consoleReporter)
 
 setup :: Aff Unit
 setup = liftEffect $ rename ".env" ".env.bak"
