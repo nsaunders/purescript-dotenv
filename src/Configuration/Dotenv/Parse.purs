@@ -4,18 +4,20 @@ module Configuration.Dotenv.Parse (configParser) where
 
 import Prelude
 import Control.Alt ((<|>))
+import Data.Array (fromFoldable) as Array
 import Data.Array (many)
 import Data.List (List, catMaybes)
 import Data.Tuple (Tuple(..))
-import Data.String.CodeUnits (fromCharArray)
+import Data.String.CodeUnits (fromCharArray) as String
 import Text.Parsing.Parser (Parser)
-import Text.Parsing.Parser.Combinators ((<?>), optionMaybe, sepBy)
-import Text.Parsing.Parser.String (char, noneOf)
+import Text.Parsing.Parser.Combinators ((<?>), manyTill, optionMaybe, sepEndBy, skipMany)
+import Text.Parsing.Parser.String (anyChar, char, noneOf)
 
 -- | A `.env` file parser
 configParser :: Parser String (List (Tuple String String))
 configParser = do
-  variables <- optionMaybe variable `sepBy` eol
+  skipMany comment
+  variables <- optionMaybe variable `sepEndBy` (eol *> skipMany comment)
   pure $ catMaybes variables
 
 -- | Parses the end of a line.
@@ -25,10 +27,14 @@ eol = newline <|> crlf <?> "new-line"
     newline = char '\n' <?> "lf new-line"
     crlf = char '\r' *> char '\n' <?> "crlf new-line"
 
+-- | Parses a comment in the form of `# Comment`.
+comment :: Parser String String
+comment = char '#' *> ((String.fromCharArray <<< Array.fromFoldable) <$> manyTill anyChar eol)
+
 -- | Parses a variable in the form of `KEY=value`.
 variable :: Parser String (Tuple String String)
 variable = do
-  name <- fromCharArray <$> many (noneOf ['=', '\r', '\n'])
+  name <- String.fromCharArray <$> many (noneOf ['=', '\r', '\n'])
   _ <- char '='
-  value <- fromCharArray <$> many (noneOf ['\r', '\n'])
+  value <- String.fromCharArray <$> many (noneOf ['\r', '\n'])
   pure $ Tuple name value
