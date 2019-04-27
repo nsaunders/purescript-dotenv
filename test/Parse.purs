@@ -25,3 +25,6 @@ tests = describe "configParser" do
 
   it "should skip commented lines" $
     parse "# Comment\nA=B\n# Comment\n# Comment\nC=D" `shouldEqual` success [ Tuple "A" "B", Tuple "C" "D" ]
+
+  it "should parse empty values as empty strings" $
+    parse "A=" `shouldEqual` success [ Tuple "A" "" ]
