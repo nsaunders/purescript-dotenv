@@ -28,3 +28,6 @@ tests = describe "configParser" do
 
   it "should parse empty values as empty strings" $
     parse "A=" `shouldEqual` success [ Tuple "A" "" ]
+
+  it "should trim unquoted values" $
+    parse "A= a " `shouldEqual` success [ Tuple "A" "a" ]

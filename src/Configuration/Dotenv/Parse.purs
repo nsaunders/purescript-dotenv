@@ -9,6 +9,7 @@ import Data.Foldable (class Foldable)
 import Data.List (List)
 import Data.Tuple (Tuple(..))
 import Data.String.CodeUnits (fromCharArray) as String
+import Data.String.Common (trim)
 import Text.Parsing.Parser (Parser)
 import Text.Parsing.Parser.Combinators ((<?>), lookAhead, manyTill, notFollowedBy, sepEndBy, skipMany)
 import Text.Parsing.Parser.String (anyChar, char)
@@ -42,7 +43,7 @@ comment = char '#' *> tillEnd
 variable :: Parser String (Tuple String String)
 variable = do
   name <- unfoldToString <$> manyTill anyChar (char '=')
-  value <- unfoldToString <$> manyTill anyChar (lookAhead eol <|> eof)
+  value <- (trim <<< unfoldToString) <$> manyTill anyChar (lookAhead eol <|> eof)
   pure $ Tuple name value
 
 -- | Creates a `String` from a character list.
