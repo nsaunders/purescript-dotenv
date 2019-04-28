@@ -20,32 +20,32 @@ success = Right <<< List.fromFoldable
 tests :: Spec Unit
 tests = describe "configParser" do
 
-  it "should skip blank lines" $
+  it "skips blank lines" $
     parse "A=B\n\nC=D" `shouldEqual` success [ Tuple "A" "B", Tuple "C" "D" ]
 
-  it "should skip commented lines" $
+  it "skips commented lines" $
     parse "# Comment\nA=B\n# Comment\n# Comment\nC=D" `shouldEqual` success [ Tuple "A" "B", Tuple "C" "D" ]
 
-  it "should parse empty values as empty strings" $
+  it "parses empty values as empty strings" $
     parse "A=" `shouldEqual` success [ Tuple "A" "" ]
 
-  it "should trim unquoted values" $
+  it "trims unquoted values" $
     parse "A= a " `shouldEqual` success [ Tuple "A" "a" ]
 
-  it "should parse single-quoted values" $
+  it "parses single-quoted values" $
     parse "A='a'" `shouldEqual` success [ Tuple "A" "a" ]
 
-  it "should parse double-quoted values" $
+  it "parses double-quoted values" $
     parse "A=\"Testing\"" `shouldEqual` success [ Tuple "A" "Testing" ]
 
-  it "should parse multiline values" $
+  it "parses multiline values" $
     parse "A=\"Testing\n123\"" `shouldEqual` success [ Tuple "A" "Testing\n123" ]
 
-  it "should maintain inner quotes" $
+  it "maintains inner quotes" $
     parse "JSON={\"a\": \"aval\"}" `shouldEqual` success [ Tuple "JSON" "{\"a\": \"aval\"}" ]
 
-  it "should maintain leading and trailing whitespace within single-quoted values" $
+  it "maintains leading and trailing whitespace within single-quoted values" $
     parse "A=' a '" `shouldEqual` success [ Tuple "A" " a " ]
 
-  it "should maintain leading and trailing whitespace within double-quoted values" $
+  it "maintains leading and trailing whitespace within double-quoted values" $
     parse "A=' a '" `shouldEqual` success [ Tuple "A" " a " ]
