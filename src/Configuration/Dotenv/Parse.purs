@@ -49,7 +49,7 @@ quotedValue q = char q *> manyTill anyChar (char q)
 variable :: Parser String (Tuple String String)
 variable = do
   name <- unfoldToString <$> manyTill anyChar (char '=')
-  value <- trim <<< unfoldToString <$> (quotedValue '"' <|> unquotedValue)
+  value <- unfoldToString <$> ((quotedValue '"' <|> quotedValue '\'')) <|> (trim <<< unfoldToString <$> unquotedValue)
   pure $ Tuple name value
 
 -- | Creates a `String` from a character list.

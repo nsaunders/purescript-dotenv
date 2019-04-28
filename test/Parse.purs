@@ -32,8 +32,20 @@ tests = describe "configParser" do
   it "should trim unquoted values" $
     parse "A= a " `shouldEqual` success [ Tuple "A" "a" ]
 
-  it "should parse quoted values" $
+  it "should parse single-quoted values" $
+    parse "A='a'" `shouldEqual` success [ Tuple "A" "a" ]
+
+  it "should parse double-quoted values" $
     parse "A=\"Testing\"" `shouldEqual` success [ Tuple "A" "Testing" ]
 
   it "should parse multiline values" $
     parse "A=\"Testing\n123\"" `shouldEqual` success [ Tuple "A" "Testing\n123" ]
+
+  it "should maintain inner quotes" $
+    parse "JSON={\"a\": \"aval\"}" `shouldEqual` success [ Tuple "JSON" "{\"a\": \"aval\"}" ]
+
+  it "should maintain leading and trailing whitespace within single-quoted values" $
+    parse "A=' a '" `shouldEqual` success [ Tuple "A" " a " ]
+
+  it "should maintain leading and trailing whitespace within double-quoted values" $
+    parse "A=' a '" `shouldEqual` success [ Tuple "A" " a " ]
