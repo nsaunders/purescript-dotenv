@@ -1,6 +1,6 @@
 {
-  "name": "purescript-node-dotenv",
-  "homepage": "https://github.com/nicholassaunders/purescript-node-dotenv",
+  "name": "purescript-dotenv",
+  "homepage": "https://github.com/nicholassaunders/purescript-dotenv",
   "authors": [
     "Nick Saunders <nick@saunde.rs>"
   ],
@@ -13,7 +13,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/nicholassaunders/purescript-node-dotenv.git"
+    "url": "git://github.com/nicholassaunders/purescript-dotenv.git"
   },
   "license": "MIT",
   "ignore": [
