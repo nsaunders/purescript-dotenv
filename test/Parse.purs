@@ -31,3 +31,9 @@ tests = describe "configParser" do
 
   it "should trim unquoted values" $
     parse "A= a " `shouldEqual` success [ Tuple "A" "a" ]
+
+  it "should parse quoted values" $
+    parse "A=\"Testing\"" `shouldEqual` success [ Tuple "A" "Testing" ]
+
+  it "should parse multiline values" $
+    parse "A=\"Testing\n123\"" `shouldEqual` success [ Tuple "A" "Testing\n123" ]

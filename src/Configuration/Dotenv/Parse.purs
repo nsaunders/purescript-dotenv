@@ -1,6 +1,6 @@
 -- | This module encapsulates the parsing logic for a `.env` file.
 
-module Configuration.Dotenv.Parse (configParser) where
+module Configuration.Dotenv.Parse where
 
 import Prelude
 import Control.Alt ((<|>))
@@ -39,11 +39,17 @@ tillEnd = unfoldToString <$> manyTill anyChar (lookAhead eol <|> eof)
 comment :: Parser String String
 comment = char '#' *> tillEnd
 
+unquotedValue :: Parser String (List Char)
+unquotedValue = manyTill anyChar (lookAhead eol <|> eof)
+
+quotedValue :: Char -> Parser String (List Char)
+quotedValue q = char q *> manyTill anyChar (char q)
+
 -- | Parses a variable in the form of `KEY=value`.
 variable :: Parser String (Tuple String String)
 variable = do
   name <- unfoldToString <$> manyTill anyChar (char '=')
-  value <- (trim <<< unfoldToString) <$> manyTill anyChar (lookAhead eol <|> eof)
+  value <- trim <<< unfoldToString <$> (quotedValue '"' <|> unquotedValue)
   pure $ Tuple name value
 
 -- | Creates a `String` from a character list.
