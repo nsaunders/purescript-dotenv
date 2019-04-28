@@ -25,7 +25,7 @@ writeConfig config = writeFile ".env" <=< liftEffect $ Buffer.fromString config 
 tests :: Spec Unit
 tests = describe "loadFile" do
 
-  it "should apply settings from .env" $ do
+  it "applies settings from .env" $ do
     setup
     writeConfig "TEST_ONE=hello"
     _ <- Dotenv.loadFile
@@ -33,7 +33,7 @@ tests = describe "loadFile" do
     testOne `shouldEqual` (Just "hello")
     # finally teardown
 
-  it "should not replace existing environment variables" $ do
+  it "does not replace existing environment variables" $ do
     setup
     writeConfig "TEST_TWO=hi2"
     liftEffect $ setEnv "TEST_TWO" "hi"
@@ -42,5 +42,5 @@ tests = describe "loadFile" do
     two `shouldEqual` Just "hi"
     # finally teardown
 
-  it "should not throw an error when the .env file does not exist" $
+  it "does not throw an error when the .env file does not exist" $
     setup *> Dotenv.loadFile *> teardown
