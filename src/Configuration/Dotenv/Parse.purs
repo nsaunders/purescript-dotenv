@@ -49,7 +49,7 @@ name = unfoldToString <$> (manyTill anyChar $ char '=')
 
 -- | Parses an unquoted variable value.
 unquotedValue :: Parser String (List Char)
-unquotedValue = manyTill anyChar (lookAhead eol <|> eof)
+unquotedValue = manyTill anyChar ((lookAhead comment *> pure unit) <|> lookAhead eol <|> eof)
 
 -- | Parses a quoted variable value enclosed within the specified type of quotation mark.
 quotedValue :: Char -> Parser String (List Char)
