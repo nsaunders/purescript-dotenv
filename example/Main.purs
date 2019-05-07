@@ -1,4 +1,4 @@
-module Example.Main where
+module Main where
 
 import Prelude
 import Configuration.Dotenv (loadFile) as Dotenv
@@ -10,6 +10,6 @@ import Node.Process (lookupEnv)
 
 main :: Effect Unit
 main = launchAff_ do
-  _ <- Dotenv.loadFile
+  void Dotenv.loadFile
   testVar <- liftEffect $ lookupEnv "TEST_VAR"
   liftEffect $ logShow testVar

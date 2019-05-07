@@ -23,5 +23,5 @@ values defined in ```.env```.
 ### Example
 To run the [example](example/Main.purs):
 ```
-pulp run -I example --main Example.Main
+pulp run -I example
 ```
