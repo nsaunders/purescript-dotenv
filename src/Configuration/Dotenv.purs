@@ -29,7 +29,7 @@ loadFile
   :: forall m
    . MonadAff m
   => m Settings
-loadFile = readConfig >>= (liftAff <<< parseConfig) >>= applySettings
+loadFile = readConfig >>= parseConfig >>> liftAff >>= applySettings
 
 -- | Reads the `.env` file.
 readConfig
