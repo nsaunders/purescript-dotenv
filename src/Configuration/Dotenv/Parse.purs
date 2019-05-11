@@ -2,62 +2,47 @@
 
 module Configuration.Dotenv.Parse (configParser) where
 
-import Prelude
+import Prelude hiding (between)
 import Control.Alt ((<|>))
-import Data.Array (fromFoldable) as Array
-import Data.Foldable (class Foldable)
+import Data.Array ((:), many)
 import Data.List (List)
+import Data.String.CodeUnits (fromCharArray)
 import Data.Tuple (Tuple(..))
-import Data.String.CodeUnits (fromCharArray) as String
 import Data.String.Common (trim)
 import Text.Parsing.Parser (Parser)
-import Text.Parsing.Parser.Combinators ((<?>), lookAhead, manyTill, notFollowedBy, sepEndBy, skipMany)
-import Text.Parsing.Parser.String (anyChar, char)
+import Text.Parsing.Parser.Combinators (between, sepEndBy, skipMany)
+import Text.Parsing.Parser.String (char, noneOf, oneOf)
+import Text.Parsing.Parser.Token (alphaNum)
+
+-- | Newline characters (carriage return / line feed)
+newlineChars :: Array Char
+newlineChars = ['\r', '\n']
 
 -- | A `.env` file parser
 configParser :: Parser String (List (Tuple String String))
 configParser = do
-  skipMany ((comment *> pure unit) <|> eol)
-  variable `sepEndBy` (eol *> skipMany ((comment *> pure unit) <|> eol))
-
--- | Parses the end of a line.
-eol :: Parser String Unit
-eol = (newline <|> crlf <?> "newline") *> pure unit
-  where
-    newline = char '\n' <?> "lf newline"
-    crlf = char '\r' *> char '\n' <?> "crlf newline"
-
--- | Parses the end of a file.
-eof :: Parser String Unit
-eof = notFollowedBy anyChar
-
--- | Parses the remainder of the line.
-tillEnd :: Parser String (List Char)
-tillEnd = manyTill anyChar (lookAhead eol <|> eof)
-
--- | Creates a `String` from a character list.
-unfoldToString :: forall f. Foldable f => f Char -> String
-unfoldToString = String.fromCharArray <<< Array.fromFoldable
+  skipMany (void comment <|> void (oneOf newlineChars))
+  variable `sepEndBy` (oneOf newlineChars *> skipMany (void comment <|> void (oneOf newlineChars)))
 
 -- | Parses a comment in the form of `# Comment`.
 comment :: Parser String String
-comment = unfoldToString <$> (char '#' *> tillEnd)
+comment = char '#' *> (fromCharArray <$> many (noneOf newlineChars))
 
 -- | Parses a variable name.
 name :: Parser String String
-name = unfoldToString <$> (manyTill anyChar $ char '=')
+name = fromCharArray <$> many (alphaNum <|> char '_') <* char '='
 
 -- | Parses an unquoted variable value.
-unquotedValue :: Parser String (List Char)
-unquotedValue = manyTill anyChar ((lookAhead comment *> pure unit) <|> lookAhead eol <|> eof)
+unquotedValue :: Parser String String
+unquotedValue = trim <<< fromCharArray <$> many (noneOf $ '#' : newlineChars)
 
 -- | Parses a quoted variable value enclosed within the specified type of quotation mark.
-quotedValue :: Char -> Parser String (List Char)
-quotedValue q = char q *> manyTill anyChar (char q)
+quotedValue :: Char -> Parser String String
+quotedValue q = between (char q) (char q) (fromCharArray <$> many (noneOf [q]))
 
 -- | Parses a variable value.
 value :: Parser String String
-value = unfoldToString <$> (quotedValue '"' <|> quotedValue '\'') <|> trim <<< unfoldToString <$> unquotedValue
+value = quotedValue '"' <|> quotedValue '\'' <|> unquotedValue
 
 -- | Parses a variable in the form of `KEY=value`.
 variable :: Parser String (Tuple String String)
