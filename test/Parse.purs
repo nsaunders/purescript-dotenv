@@ -1,54 +1,84 @@
-module Test.Parse where
+module Test.Parse (tests) where
 
 import Prelude
 import Data.Either (Either(..))
-import Data.Foldable (class Foldable)
-import Data.List (fromFoldable) as List
+import Data.List (List(Nil), (:))
 import Data.Tuple (Tuple(..))
-import Text.Parsing.Parser (ParseError, runParser)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
-import Configuration.Dotenv (Settings)
-import Configuration.Dotenv.Parse (configParser)
-
-parse :: String -> Either ParseError Settings
-parse = flip runParser configParser
-
-success :: forall f. Foldable f => f (Tuple String String) -> Either ParseError Settings
-success = Right <<< List.fromFoldable
+import Text.Parsing.Parser (runParser)
+import Configuration.Dotenv.Parse (settings)
+import Configuration.Dotenv.Types (Value(..))
 
 tests :: Spec Unit
-tests = describe "configParser" do
+tests = describe "settings parser" do
 
   it "skips blank lines" $
-    parse "A=B\n\nC=D" `shouldEqual` success [ Tuple "A" "B", Tuple "C" "D" ]
-
+    let
+      expected = Right $ Tuple "A" (LiteralValue "B") : Tuple "C" (LiteralValue "D") : Nil
+      actual = "A=B\n\nC=D" `runParser` settings
+    in
+      actual `shouldEqual` expected
+ 
   it "skips commented lines" $
-    parse "# Comment\nA=B\n# Comment\n# Comment\nC=D" `shouldEqual` success [ Tuple "A" "B", Tuple "C" "D" ]
+    let
+      expected = Right $ Tuple "A" (LiteralValue "B") : Tuple "C" (LiteralValue "D") : Nil
+      actual = "# Comment\nA=B\n# Comment\n# Comment\nC=D" `runParser` settings
+    in
+      actual `shouldEqual` expected
 
-  it "skips comments after a variable" $
-    parse "A=a\nB=b # Testing" `shouldEqual` success [ Tuple "A" "a", Tuple "B" "b" ]
-
-  it "parses empty values as empty strings" $
-    parse "A=" `shouldEqual` success [ Tuple "A" "" ]
+  it "skips comments on the same line after a setting" $
+    let
+      expected = Right $ Tuple "A" (LiteralValue "B") : Tuple "C" (LiteralValue "D") : Nil
+      actual = "A=B\nC=D # Testing" `runParser` settings
+    in
+      actual `shouldEqual` expected
 
   it "trims unquoted values" $
-    parse "A= a " `shouldEqual` success [ Tuple "A" "a" ]
+    let
+      expected = Right $ Tuple "A" (LiteralValue "a") : Nil
+      actual = "A= \t a " `runParser` settings
+    in
+      actual `shouldEqual` expected
 
   it "parses single-quoted values" $
-    parse "A='a'" `shouldEqual` success [ Tuple "A" "a" ]
+    let
+      expected = Right $ Tuple "A" (LiteralValue "a") : Nil
+      actual = "A='a'" `runParser` settings
+    in
+      actual `shouldEqual` expected
 
   it "parses double-quoted values" $
-    parse "A=\"Testing\"" `shouldEqual` success [ Tuple "A" "Testing" ]
+    let
+      expected = Right $ Tuple "A" (LiteralValue "a") : Nil
+      actual = "A=\"a\"" `runParser` settings
+    in
+      actual `shouldEqual` expected
 
   it "parses multiline values" $
-    parse "A=\"Testing\n123\"" `shouldEqual` success [ Tuple "A" "Testing\n123" ]
+    let
+      expected = Right $ Tuple "A" (LiteralValue "Testing\r\n123") : Nil
+      actual = "A=\"Testing\r\n123\"" `runParser` settings
+    in
+      actual `shouldEqual` expected
 
   it "maintains inner quotes" $
-    parse "JSON={\"a\": \"aval\"}" `shouldEqual` success [ Tuple "JSON" "{\"a\": \"aval\"}" ]
+    let
+      expected = Right $ Tuple "JSON" (LiteralValue "{\"a\": \"aval\"}") : Nil
+      actual = "JSON={\"a\": \"aval\"}" `runParser` settings
+    in
+      actual `shouldEqual` expected
 
   it "maintains leading and trailing whitespace within single-quoted values" $
-    parse "A=' a '" `shouldEqual` success [ Tuple "A" " a " ]
+    let
+      expected = Right $ Tuple "A" (LiteralValue "\t \ta \t") : Nil
+      actual = "A='\t \ta \t'" `runParser` settings
+    in
+      actual `shouldEqual` expected
 
-  it "maintains leading and trailing whitespace within double-quoted values" $
-    parse "A=' a '" `shouldEqual` success [ Tuple "A" " a " ]
+  it "maintains leading and trailing whitespace within single-quoted values" $
+    let
+      expected = Right $ Tuple "A" (LiteralValue " \t a \t ") : Nil
+      actual = "A=\" \t a \t \"" `runParser` settings
+    in
+      actual `shouldEqual` expected
