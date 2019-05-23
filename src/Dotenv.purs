@@ -10,7 +10,7 @@ import Data.Traversable (traverse)
 import Data.Tuple (Tuple(..))
 import Dotenv.Internal.Parse (settings) as Parse
 import Dotenv.Internal.Resolve (values) as Resolve
-import Dotenv.Internal.Types (Setting) as Internal
+import Dotenv.Internal.Types (Settings) as Internal
 import Dotenv.Types (Setting, Settings)
 import Effect.Aff.Class (class MonadAff, liftAff)
 import Effect.Class (liftEffect)
@@ -30,7 +30,7 @@ readSettings = liftAff $ readTextFile UTF8 ".env"
                        # flip catchError (const $ pure "")
 
 -- | Parses the contents of a `.env` file.
-parseSettings :: forall m. MonadThrow Error m => String -> m (Array Internal.Setting)
+parseSettings :: forall m. MonadThrow Error m => String -> m Internal.Settings
 parseSettings settings = runParser settings Parse.settings
   # either (throwError <<< error <<< append "Invalid .env file: " <<< parseErrorMessage) pure
 
