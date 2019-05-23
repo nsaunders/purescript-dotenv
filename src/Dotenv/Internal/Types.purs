@@ -1,10 +1,11 @@
 -- | This module contains the data types representing parsed `.env` content.
 
-module Dotenv.Internal.Types (Name, Setting, Value(..)) where
+module Dotenv.Internal.Types (Environment, Name, Setting, Settings, Value(..)) where
 
 import Prelude
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Tuple (Tuple)
+import Foreign.Object (Object)
 
 -- | The name of a setting
 type Name = String
@@ -21,3 +22,9 @@ instance showValue :: Show Value where
 
 -- | The conjunction of a setting name and value
 type Setting = Tuple Name Value
+
+-- | A collection of settings
+type Settings = Array (Tuple Name Value)
+
+-- | Environment variables
+type Environment = Object String

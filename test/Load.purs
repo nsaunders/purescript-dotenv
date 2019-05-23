@@ -1,8 +1,8 @@
-module Test.Load where
+module Test.Load (tests) where
 
 import Prelude
-import Configuration.Dotenv as Dotenv
 import Data.Maybe (Maybe(Just))
+import Dotenv as Dotenv
 import Effect.Aff (Aff, finally)
 import Effect.Class (liftEffect)
 import Node.Buffer (fromString) as Buffer
@@ -13,7 +13,6 @@ import Node.Process (lookupEnv, setEnv)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 
-{-
 setup :: Aff Unit
 setup = liftEffect $ rename ".env" ".env.bak"
 
@@ -30,7 +29,7 @@ tests = describe "loadFile" do
     setup
     writeConfig "TEST_ONE=hello"
     _ <- Dotenv.loadFile
-    testOne <- liftEffect (lookupEnv "TEST_ONE")
+    testOne <- liftEffect $ lookupEnv "TEST_ONE"
     testOne `shouldEqual` (Just "hello")
     # finally teardown
 
@@ -39,10 +38,9 @@ tests = describe "loadFile" do
     writeConfig "TEST_TWO=hi2"
     liftEffect $ setEnv "TEST_TWO" "hi"
     _ <- Dotenv.loadFile
-    two <- liftEffect (lookupEnv "TEST_TWO")
+    two <- liftEffect $ lookupEnv "TEST_TWO"
     two `shouldEqual` Just "hi"
     # finally teardown
 
   it "does not throw an error when the .env file does not exist" $
     setup *> Dotenv.loadFile *> teardown
-  -}

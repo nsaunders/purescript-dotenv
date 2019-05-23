@@ -7,10 +7,9 @@ import Control.Alt ((<|>))
 import Data.Array (fromFoldable, many, some)
 import Data.Array.NonEmpty (head, length, some) as NonEmpty
 import Data.Array.NonEmpty (NonEmptyArray)
-import Data.List (List)
 import Data.String.CodeUnits (fromCharArray)
 import Data.Tuple (Tuple(..))
-import Dotenv.Internal.Types (Name, Setting, Value(..))
+import Dotenv.Internal.Types (Name, Settings, Value(..))
 import Text.Parsing.Parser (Parser)
 import Text.Parsing.Parser.Combinators ((<?>), lookAhead, notFollowedBy, skipMany, sepEndBy, try)
 import Text.Parsing.Parser.String (char, noneOf, oneOf, string, whiteSpace)
@@ -25,7 +24,7 @@ whitespaceChars :: Array Char
 whitespaceChars = [' ', '\t']
 
 -- | Parses `.env` settings.
-settings :: Parser String (Array Setting)
+settings :: Parser String Settings
 settings = fromFoldable <$> do
   skipMany (void comment <|> void (oneOf newlineChars))
   setting `sepEndBy` (oneOf newlineChars *> skipMany (void comment <|> void (oneOf newlineChars)))

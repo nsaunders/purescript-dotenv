@@ -1,6 +1,6 @@
 -- | This is the base module for the Dotenv library.
 
-module Dotenv where
+module Dotenv (module Dotenv.Types, loadFile) where
 
 import Prelude
 import Control.Monad.Error.Class (class MonadThrow, catchError, throwError)
@@ -22,7 +22,7 @@ import Text.Parsing.Parser (parseErrorMessage, runParser)
 
 -- | Loads the `.env` file into the environment.
 loadFile :: forall m. MonadAff m => MonadThrow Error m => m Settings
-loadFile = Resolve.values <$> liftEffect getEnv <*> (readSettings >>= parseSettings)
+loadFile = (Resolve.values <$> liftEffect getEnv <*> (readSettings >>= parseSettings)) >>= applySettings
 
 -- | Reads the `.env` file.
 readSettings :: forall m. MonadAff m => m String

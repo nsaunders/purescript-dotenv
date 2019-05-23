@@ -11,13 +11,13 @@ import Data.Maybe (Maybe)
 import Data.String (joinWith)
 import Data.Traversable (sequence)
 import Data.Tuple (Tuple, fst, snd)
-import Dotenv.Internal.Types (Name, Setting, Value(..))
-import Foreign.Object (Object, lookup)
+import Dotenv.Internal.Types (Environment, Name, Settings, Value(..))
+import Foreign.Object (lookup)
 
 -- | Given the environment and an array of `.env` settings, resolves the specified value.
 value
-  :: Object String
-  -> Array (Tuple Name Value)
+  :: Environment
+  -> Settings
   -> Value
   -> Maybe String
 value env settings val =
@@ -25,10 +25,10 @@ value env settings val =
     value' = value env settings
   in
     case val of
-      LiteralValue value        -> pure value
-      ValueExpression values    -> joinWith "" <$> (sequence $ toArray $ value' <$> values)
+      LiteralValue v            -> pure v
+      ValueExpression vs        -> joinWith "" <$> (sequence $ toArray $ value' <$> vs)
       VariableSubstitution name -> lookup name env <|> (value' =<< snd <$> find (eq name <<< fst) settings)
 
 -- | Given the environment and an array of `.env` settings, resolves the value of each setting.
-values :: Object String -> Array (Tuple Name Value) -> Array (Tuple Name (Maybe String))
+values :: Environment -> Settings -> Array (Tuple Name (Maybe String))
 values env settings = rmap (value env settings) <$> settings
