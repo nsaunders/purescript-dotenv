@@ -12,6 +12,7 @@ import Data.String (joinWith)
 import Data.Traversable (sequence)
 import Data.Tuple (Tuple, fst, snd)
 import Dotenv.Internal.Types (Environment, Name, Settings, Value(..))
+import Dotenv.Types (Settings) as Public
 import Foreign.Object (lookup)
 
 -- | Given the environment and an array of `.env` settings, resolves the specified value.
@@ -30,5 +31,5 @@ value env settings val =
       VariableSubstitution name -> lookup name env <|> (value' =<< snd <$> find (eq name <<< fst) settings)
 
 -- | Given the environment and an array of `.env` settings, resolves the value of each setting.
-values :: Environment -> Settings -> Array (Tuple Name (Maybe String))
+values :: Environment -> Settings -> Public.Settings
 values env settings = rmap (value env settings) <$> settings

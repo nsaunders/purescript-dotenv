@@ -1,4 +1,4 @@
--- | This module contains the data types representing parsed `.env` content.
+-- | This module contains data types representing parsed `.env` content and the unmodified environment.
 
 module Dotenv.Internal.Types (Environment, Name, Setting, Settings, Value(..)) where
 
@@ -20,7 +20,7 @@ instance showValue :: Show Value where
   show (VariableSubstitution v) = "(VariableSubstitution \"" <> v <> "\")"
   show (ValueExpression vs) = "(ValueExpression " <> show vs <> ")"
 
--- | The conjunction of a setting name and value
+-- | The conjunction of a setting name and the corresponding value
 type Setting = Tuple Name Value
 
 -- | A collection of settings

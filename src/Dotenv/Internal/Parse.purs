@@ -9,7 +9,7 @@ import Data.Array.NonEmpty (head, length, some) as NonEmpty
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.String.CodeUnits (fromCharArray)
 import Data.Tuple (Tuple(..))
-import Dotenv.Internal.Types (Name, Settings, Value(..))
+import Dotenv.Internal.Types (Name, Setting, Settings, Value(..))
 import Text.Parsing.Parser (Parser)
 import Text.Parsing.Parser.Combinators ((<?>), lookAhead, notFollowedBy, skipMany, sepEndBy, try)
 import Text.Parsing.Parser.String (char, noneOf, oneOf, string, whiteSpace)
@@ -70,5 +70,5 @@ value :: Parser String Value
 value = (quotedValue '"' <|> quotedValue '\'' <|> unquotedValue) <?> "variable value"
 
 -- | Parses a setting in the form of `NAME=value`.
-setting :: Parser String (Tuple String Value)
+setting :: Parser String Setting
 setting = Tuple <$> name <*> value

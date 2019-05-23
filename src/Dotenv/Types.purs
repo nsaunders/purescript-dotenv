@@ -1,4 +1,4 @@
--- | This module defines type aliases used in the base module.
+-- | This module defines type aliases representing `.env` settings.
 
 module Dotenv.Types (Name, Setting, Settings, Value) where
 
