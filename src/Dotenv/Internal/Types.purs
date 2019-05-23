@@ -1,6 +1,6 @@
 -- | This module contains the data types representing parsed `.env` content.
 
-module Configuration.Dotenv.Types (Name, Setting, Value(..)) where
+module Dotenv.Internal.Types (Name, Setting, Value(..)) where
 
 import Prelude
 import Data.Array.NonEmpty (NonEmptyArray)

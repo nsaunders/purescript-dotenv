@@ -1,20 +1,20 @@
 -- | This module encapsulates the parsing logic for a `.env` file.
 
-module Configuration.Dotenv.Parse (settings) where
+module Dotenv.Internal.Parse (settings) where
 
 import Prelude hiding (between)
 import Control.Alt ((<|>))
-import Data.Array ((:), many, some)
+import Data.Array (fromFoldable, many, some)
 import Data.Array.NonEmpty (head, length, some) as NonEmpty
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.List (List)
 import Data.String.CodeUnits (fromCharArray)
 import Data.Tuple (Tuple(..))
+import Dotenv.Internal.Types (Name, Setting, Value(..))
 import Text.Parsing.Parser (Parser)
 import Text.Parsing.Parser.Combinators ((<?>), lookAhead, notFollowedBy, skipMany, sepEndBy, try)
 import Text.Parsing.Parser.String (char, noneOf, oneOf, string, whiteSpace)
 import Text.Parsing.Parser.Token (alphaNum)
-import Configuration.Dotenv.Types (Name, Setting, Value(..))
 
 -- | Newline characters (carriage return / line feed)
 newlineChars :: Array Char
@@ -25,8 +25,8 @@ whitespaceChars :: Array Char
 whitespaceChars = [' ', '\t']
 
 -- | Parses `.env` settings.
-settings :: Parser String (List Setting)
-settings = do
+settings :: Parser String (Array Setting)
+settings = fromFoldable <$> do
   skipMany (void comment <|> void (oneOf newlineChars))
   setting `sepEndBy` (oneOf newlineChars *> skipMany (void comment <|> void (oneOf newlineChars)))
 

@@ -9,5 +9,5 @@ import Test.Parse as Parse
 
 main :: Effect Unit
 main = run [ consoleReporter ] do
-  Load.tests
+--  Load.tests
   Parse.tests

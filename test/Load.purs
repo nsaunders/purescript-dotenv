@@ -13,6 +13,7 @@ import Node.Process (lookupEnv, setEnv)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 
+{-
 setup :: Aff Unit
 setup = liftEffect $ rename ".env" ".env.bak"
 
@@ -44,3 +45,4 @@ tests = describe "loadFile" do
 
   it "does not throw an error when the .env file does not exist" $
     setup *> Dotenv.loadFile *> teardown
+  -}
