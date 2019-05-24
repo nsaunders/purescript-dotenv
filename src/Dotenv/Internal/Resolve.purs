@@ -10,8 +10,8 @@ import Data.Foldable (find)
 import Data.Maybe (Maybe)
 import Data.String (joinWith)
 import Data.Traversable (sequence)
-import Data.Tuple (Tuple, fst, snd)
-import Dotenv.Internal.Types (Environment, Name, Settings, Value(..))
+import Data.Tuple (fst, snd)
+import Dotenv.Internal.Types (Environment, Settings, Value(..))
 import Dotenv.Types (Settings) as Public
 import Foreign.Object (lookup)
 
