@@ -10,13 +10,18 @@ import Foreign.Object (Object)
 type Name = String
 
 -- | The value of a setting
-data Value = LiteralValue String | VariableSubstitution String | ValueExpression (Array Value)
+data Value
+  = LiteralValue String
+  | VariableSubstitution String
+  | CommandSubstitution String
+  | ValueExpression (Array Value)
 
 derive instance eqValue :: Eq Value
 
 instance showValue :: Show Value where
   show (LiteralValue v) = "(LiteralValue \"" <> v <> "\")"
   show (VariableSubstitution v) = "(VariableSubstitution \"" <> v <> "\")"
+  show (CommandSubstitution c) = "(CommandSubstitution \"" <> c <> "\")"
   show (ValueExpression vs) = "(ValueExpression " <> show vs <> ")"
 
 -- | The conjunction of a setting name and the corresponding value

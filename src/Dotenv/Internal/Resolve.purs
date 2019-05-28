@@ -26,6 +26,7 @@ value env settings val =
   in
     case val of
       LiteralValue v            -> pure v
+      CommandSubstitution c     -> pure c
       ValueExpression vs        -> joinWith "" <$> (sequence $ value' <$> vs)
       VariableSubstitution name -> lookup name env <|> (value' =<< snd <$> find (eq name <<< fst) settings)
 

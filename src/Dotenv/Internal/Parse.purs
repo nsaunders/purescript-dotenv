@@ -43,22 +43,30 @@ variableSubstitution :: Parser String Value
 variableSubstitution =
   string "${" *> (VariableSubstitution <<< fromCharArray <$> some (alphaNum <|> char '_')) <* char '}'
 
+-- | Parses a command substitution, i.e. `$(whoami)`.
+commandSubstitution :: Parser String Value
+commandSubstitution = string "$(" *> (CommandSubstitution <<< fromCharArray <$> some (noneOf [')'])) <* char ')'
+
 -- | Parses a quoted value, enclosed in the specified type of quotation mark.
 quotedValue :: Char -> Parser String Value
-quotedValue q = valueFromValues <$> (char q *> (some $ variableSubstitution <|> literal) <* char q)
-  where
+quotedValue q =
+  let
     literal = LiteralValue <<< fromCharArray <$> some (noneOf ['$', q] <|> try (char '$' <* notFollowedBy (char '{')))
+  in
+    valueFromValues <$> (char q *> (some $ variableSubstitution <|> commandSubstitution <|> literal) <* char q)
 
 -- | Parses an unquoted value.
 unquotedValue :: Parser String Value
-unquotedValue = valueFromValues <$> (whiteSpace *> (some $ variableSubstitution <|> literal))
-  where
+unquotedValue =
+  let
     literal = map
-      ( LiteralValue <<< fromCharArray)
+      ( LiteralValue <<< fromCharArray )
       $ some 
           $ try (noneOf (['$', '#'] <> whitespaceChars <> newlineChars))
         <|> try (char '$' <* notFollowedBy (char '{'))
         <|> try (oneOf whitespaceChars <* lookAhead (noneOf $ ['#'] <> whitespaceChars <> newlineChars))
+  in
+    valueFromValues <$> (whiteSpace *> (some $ variableSubstitution <|> commandSubstitution <|> literal))
 
 -- | Assembles a single value from a series of values.
 valueFromValues :: Array Value -> Value
