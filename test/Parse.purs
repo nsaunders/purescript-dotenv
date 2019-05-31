@@ -29,8 +29,8 @@ tests = describe "settings parser" do
 
   it "skips comments on the same line after a setting" $
     let
-      expected = Right [ Tuple "A" $ LiteralValue "B", Tuple "C" $ LiteralValue "D" ]
-      actual = "A=B\nC=D # Testing" `runParser` settings
+      expected = Right [ Tuple "A" $ LiteralValue "B", Tuple "C" $ LiteralValue "D", Tuple "E" $ LiteralValue "F" ]
+      actual = "A=B\nC=D # Testing\nE=F" `runParser` settings
     in
       actual `shouldEqual` expected
 

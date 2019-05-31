@@ -71,4 +71,4 @@ value = (quotedValue '"' <|> quotedValue '\'' <|> unquotedValue) <?> "variable v
 
 -- | Parses a setting in the form of `NAME=value`.
 setting :: Parser String Setting
-setting = Tuple <$> name <*> value
+setting = Tuple <$> name <*> value <* many (noneOf newlineChars)
