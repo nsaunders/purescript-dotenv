@@ -26,8 +26,10 @@ whitespaceChars = [' ', '\t']
 -- | Parses `.env` settings.
 settings :: Parser String Settings
 settings = fromFoldable <$> do
-  skipMany (void comment <|> void (oneOf newlineChars))
-  setting `sepEndBy` (oneOf newlineChars *> skipMany (void comment <|> void (oneOf newlineChars)))
+  skipMany notSetting
+  (setting <* many (noneOf newlineChars)) `sepEndBy` skipMany notSetting
+  where
+    notSetting = void comment <|> void (oneOf newlineChars)
 
 -- | Parses a comment in the form of `# Comment`.
 comment :: Parser String String
@@ -71,4 +73,4 @@ value = (quotedValue '"' <|> quotedValue '\'' <|> unquotedValue) <?> "variable v
 
 -- | Parses a setting in the form of `NAME=value`.
 setting :: Parser String Setting
-setting = Tuple <$> name <*> value <* many (noneOf newlineChars)
+setting = Tuple <$> name <*> value
