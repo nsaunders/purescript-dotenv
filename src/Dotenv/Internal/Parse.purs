@@ -1,6 +1,6 @@
 -- | This module encapsulates the parsing logic for a `.env` file.
 
-module Dotenv.Internal.Parse (settings) where
+module Dotenv.Internal.Parse where
 
 import Prelude hiding (between)
 import Control.Alt ((<|>))
@@ -63,7 +63,7 @@ unquotedValue =
       ( LiteralValue <<< fromCharArray )
       $ some 
           $ try (noneOf (['$', '#'] <> whitespaceChars <> newlineChars))
-        <|> try (char '$' <* notFollowedBy (char '{'))
+        <|> try (char '$' <* notFollowedBy (oneOf ['{', '(']))
         <|> try (oneOf whitespaceChars <* lookAhead (noneOf $ ['#'] <> whitespaceChars <> newlineChars))
   in
     valueFromValues <$> (whiteSpace *> (some $ variableSubstitution <|> commandSubstitution <|> literal))

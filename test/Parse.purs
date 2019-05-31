@@ -89,3 +89,13 @@ tests = describe "settings parser" do
       actual = "A=Hi, ${USER}!" `runParser` settings
     in
       actual `shouldEqual` expected
+
+  it "parses command substitutions" $
+    let
+      expected =
+        Right
+          [ Tuple "A" $ ValueExpression $ cons' (LiteralValue "Hi, ") [ CommandSubstitution "whoami", LiteralValue "!" ]
+          ]
+      actual = "A=Hi, $(whoami)!" `runParser` settings
+    in
+      actual `shouldEqual` expected
