@@ -1,27 +1,33 @@
 # purescript-dotenv ![Build Status](https://img.shields.io/travis/nicholassaunders/purescript-dotenv.svg) [![purescript-dotenv on Pursuit](https://pursuit.purescript.org/packages/purescript-dotenv/badge)](https://pursuit.purescript.org/packages/purescript-dotenv)
 ## Load environment variables from a ```.env``` file.
 
-This is a lightweight clone of various dotenv projects like
-[this Haskell version](https://github.com/stackbuilders/dotenv-hs) or
-[this JavaScript version](https://github.com/motdotla/dotenv#readme).
+According to [_The Twelve-Factor App_](https://12factor.net/config), configuration should be strictly separated from code and instead stored in environment variables. Though certainly a good practice, if you have found this to be inconvenient, then you may want to give ```purescript-dotenv``` a try.
 
 ### Overview
+
+By allowing a configuration file to be consumed through the [```purescript-node-process``` environment API](https://pursuit.purescript.org/packages/purescript-node-process/7.0.0/docs/Node.Process#v:getEnv), this library enables your application code to leverage environment variables in production while reducing the burden of setting them in development and test environments.
+
+Simply place your ```.env``` configuration file in the root of your project (ensuring for security reasons not to commit it), and then call ```Dotenv.loadFile``` at the beginning of your program. Environment variable lookups throughout your program will then fall back to the values defined in ```.env```.
 
 A ```.env``` file looks like this:
 
 ```
-DATABASE_HOST=127.0.0.1
-DATABASE_PORT=3131
-DATABASE_USER=happydude
-DATABASE_PASS=password
+DB_HOST=127.0.0.1
+DB_USER=happydude
+DB_NAME=happydude
+DB_CONNECTION_STRING=postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}
 ```
 
-Simply drop the ```.env``` file in the root of your project (ensuring for security reasons not to commit it), and then
-call ```Dotenv.loadFile``` at the beginning of your program. Environment variable lookups will then fall back to the
-values defined in ```.env```.
+_Note: In the above example, you might notice that ```DB_PASS``` interpolated into the ```DB_CONNECTION_STRING``` value, is missing. This, then, would require the ```DB_PASS``` environment variable to be provided at runtime._
 
 ### Example
 To run the [example](example/Main.purs):
 ```
 pulp run -I example
 ```
+
+### Other ```dotenv``` implementations
+* Haskell: [stackbuilders/dotenv-hs](https://github.com/stackbuilders/dotenv-hs)
+* JavaScript: [motdotla/dotenv](http://github.com/motdotla/dotenv)
+* Python: [theskumar/python-dotenv](https://github.com/theskumar/python-dotenv)
+* Ruby: [bkeepers/dotenv](https://github.com/bkeepers/dotenv)
