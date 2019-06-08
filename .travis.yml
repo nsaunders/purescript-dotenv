@@ -9,4 +9,5 @@ install:
 script:
   - spago build
   - spago test
+  - rm -rf .spago output
   - pulp build
