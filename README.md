@@ -28,6 +28,7 @@ pulp run -I example
 
 ### Other ```dotenv``` implementations
 * Haskell: [stackbuilders/dotenv-hs](https://github.com/stackbuilders/dotenv-hs)
+* Haskell: [pbrisbin/load-env](https://github.com/pbrisbin/load-env)
 * JavaScript: [motdotla/dotenv](http://github.com/motdotla/dotenv)
 * Python: [theskumar/python-dotenv](https://github.com/theskumar/python-dotenv)
 * Ruby: [bkeepers/dotenv](https://github.com/bkeepers/dotenv)
