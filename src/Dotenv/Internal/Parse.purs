@@ -4,9 +4,8 @@ module Dotenv.Internal.Parse (settings) where
 
 import Prelude hiding (between)
 import Control.Alt ((<|>))
-import Data.Array (fromFoldable, many, some)
-import Data.Array.NonEmpty (head, length, some) as NonEmpty
-import Data.Array.NonEmpty (NonEmptyArray)
+import Data.Array (fromFoldable, head, length, many, some)
+import Data.Maybe (fromMaybe)
 import Data.String.CodeUnits (fromCharArray)
 import Data.Tuple (Tuple(..))
 import Dotenv.Internal.Types (Name, Setting, Settings, Value(..))
@@ -46,13 +45,13 @@ variableSubstitution =
 
 -- | Parses a quoted value, enclosed in the specified type of quotation mark.
 quotedValue :: Char -> Parser String Value
-quotedValue q = valueFromValues <$> (char q *> (NonEmpty.some $ variableSubstitution <|> literal) <* char q)
+quotedValue q = valueFromValues <$> (char q *> (some $ variableSubstitution <|> literal) <* char q)
   where
     literal = LiteralValue <<< fromCharArray <$> some (noneOf ['$', q] <|> try (char '$' <* notFollowedBy (char '{')))
 
 -- | Parses an unquoted value.
 unquotedValue :: Parser String Value
-unquotedValue = valueFromValues <$> (whiteSpace *> (NonEmpty.some $ variableSubstitution <|> literal))
+unquotedValue = valueFromValues <$> (whiteSpace *> (some $ variableSubstitution <|> literal))
   where
     literal = map
       ( LiteralValue <<< fromCharArray)
@@ -62,10 +61,10 @@ unquotedValue = valueFromValues <$> (whiteSpace *> (NonEmpty.some $ variableSubs
         <|> try (oneOf whitespaceChars <* lookAhead (noneOf $ ['#'] <> whitespaceChars <> newlineChars))
 
 -- | Assembles a single value from a series of values.
-valueFromValues :: NonEmptyArray Value -> Value
+valueFromValues :: Array Value -> Value
 valueFromValues v
-  | NonEmpty.length v == 1 = NonEmpty.head v
-  | otherwise              = ValueExpression v
+  | length v == 1 = fromMaybe (ValueExpression []) (head v)
+  | otherwise     = ValueExpression v
 
 -- | Parses a setting value.
 value :: Parser String Value

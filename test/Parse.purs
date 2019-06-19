@@ -1,7 +1,6 @@
 module Test.Parse (tests) where
 
 import Prelude
-import Data.Array.NonEmpty (cons')
 import Data.Either (Either(..))
 import Data.Tuple (Tuple(..))
 import Dotenv.Internal.Parse (settings)
@@ -86,9 +85,7 @@ tests = describe "settings parser" do
   it "parses variable substitutions" $
     let
       expected =
-        Right
-          [ Tuple "A" $ ValueExpression $ cons' (LiteralValue "Hi, ") [ VariableSubstitution "USER", LiteralValue "!" ]
-          ]
+        Right [ Tuple "A" $ ValueExpression [ LiteralValue "Hi, ", VariableSubstitution "USER", LiteralValue "!" ] ]
       actual = "A=Hi, ${USER}!" `runParser` settings
     in
       actual `shouldEqual` expected
