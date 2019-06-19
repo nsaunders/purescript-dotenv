@@ -3,7 +3,6 @@
 module Dotenv.Internal.Types (Environment, Name, Setting, Settings, Value(..)) where
 
 import Prelude
-import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Tuple (Tuple)
 import Foreign.Object (Object)
 
@@ -11,7 +10,7 @@ import Foreign.Object (Object)
 type Name = String
 
 -- | The value of a setting
-data Value = LiteralValue String | VariableSubstitution String | ValueExpression (NonEmptyArray Value)
+data Value = LiteralValue String | VariableSubstitution String | ValueExpression (Array Value)
 
 derive instance eqValue :: Eq Value
 

@@ -1,7 +1,6 @@
 module Test.Resolve (tests) where
 
 import Prelude
-import Data.Array.NonEmpty (cons')
 import Data.Foldable (find)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), fst, snd)
@@ -20,15 +19,15 @@ settings = Resolve.values (singleton "DB_PASSWORD" "asdf") $
   , Tuple "DB_PASS" $ VariableSubstitution "DB_PASSWORD"
   , Tuple "DB_NAME" $ LiteralValue "development"
   , Tuple "DB_CRED" $
-      ValueExpression $ cons'
-        ( VariableSubstitution "DB_USER" )
-        [ LiteralValue ":"
+      ValueExpression
+        [ VariableSubstitution "DB_USER"
+        , LiteralValue ":"
         , VariableSubstitution "DB_PASS"
         ]
   , Tuple "DB_CONNECTION_STRING" $
-      ValueExpression $ cons'
-        ( LiteralValue "db://" )
-        [ VariableSubstitution "DB_CRED"
+      ValueExpression
+        [ LiteralValue "db://"
+        , VariableSubstitution "DB_CRED"
         , LiteralValue "@"
         , VariableSubstitution "DB_HOST"
         , LiteralValue "/"
