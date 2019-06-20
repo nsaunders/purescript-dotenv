@@ -13,7 +13,7 @@ type Name = String
 data Value
   = LiteralValue String
   | VariableSubstitution String
-  | CommandSubstitution String
+  | CommandSubstitution String (Array String)
   | ValueExpression (Array Value)
 
 derive instance eqValue :: Eq Value
@@ -21,7 +21,7 @@ derive instance eqValue :: Eq Value
 instance showValue :: Show Value where
   show (LiteralValue v) = "(LiteralValue \"" <> v <> "\")"
   show (VariableSubstitution v) = "(VariableSubstitution \"" <> v <> "\")"
-  show (CommandSubstitution c) = "(CommandSubstitution \"" <> c <> "\")"
+  show (CommandSubstitution c a) = "(CommandSubstitution \"" <> c <> " " <> show a <> "\")"
   show (ValueExpression vs) = "(ValueExpression " <> show vs <> ")"
 
 -- | The conjunction of a setting name and the corresponding value

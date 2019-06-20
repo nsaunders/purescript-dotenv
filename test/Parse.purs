@@ -93,7 +93,11 @@ tests = describe "settings parser" do
   it "parses command substitutions" $
     let
       expected =
-        Right [ Tuple "A" $ ValueExpression [ LiteralValue "Hi, ", CommandSubstitution "whoami", LiteralValue "!" ] ]
-      actual = "A=Hi, $(whoami)!" `runParser` settings
+        Right
+          [ Tuple "A" $ ValueExpression
+            [ LiteralValue "Hello, ", CommandSubstitution "head" ["-n", "1", "user.txt"], LiteralValue "!"
+            ]
+          ]
+      actual = "A=Hello, $(head -n 1 user.txt)!" `runParser` settings
     in
       actual `shouldEqual` expected

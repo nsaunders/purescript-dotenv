@@ -4,7 +4,7 @@ module Dotenv.Internal.Parse where
 
 import Prelude hiding (between)
 import Control.Alt ((<|>))
-import Data.Array (fromFoldable, head, length, many, some)
+import Data.Array ((:), fromFoldable, head, length, many, some)
 import Data.Maybe (fromMaybe)
 import Data.String.CodeUnits (fromCharArray)
 import Data.Tuple (Tuple(..))
@@ -45,7 +45,12 @@ variableSubstitution =
 
 -- | Parses a command substitution, i.e. `$(whoami)`.
 commandSubstitution :: Parser String Value
-commandSubstitution = string "$(" *> (CommandSubstitution <<< fromCharArray <$> some (noneOf [')'])) <* char ')'
+commandSubstitution = do
+  _ <- string "$("
+  command <- fromCharArray <$> (some $ noneOf (')' : whitespaceChars))
+  arguments <- many $ whiteSpace *> (fromCharArray <$> (some $ noneOf (')' : whitespaceChars)))
+  _ <- whiteSpace *> char ')'
+  pure $ CommandSubstitution command arguments
 
 -- | Parses a quoted value, enclosed in the specified type of quotation mark.
 quotedValue :: Char -> Parser String Value
