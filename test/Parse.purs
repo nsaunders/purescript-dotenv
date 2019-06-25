@@ -82,7 +82,7 @@ tests = describe "settings parser" do
     in
       actual `shouldEqual` expected
 
-  it "parses variable substitutions" $
+  it "parses variable substitutions within unquoted values" $
     let
       expected =
         Right [ Tuple "A" $ ValueExpression [ LiteralValue "Hi, ", VariableSubstitution "USER", LiteralValue "!" ] ]
@@ -90,7 +90,15 @@ tests = describe "settings parser" do
     in
       actual `shouldEqual` expected
 
-  it "parses command substitutions" $
+  it "parses variable substitutions within quoted values" $
+    let
+      expected =
+        Right [ Tuple "A" $ ValueExpression [ LiteralValue "Hi, ", VariableSubstitution "USER", LiteralValue "!" ] ]
+      actual = "A=\"Hi, ${USER}!\"" `runParser` settings
+    in
+      actual `shouldEqual` expected
+
+  it "parses command substitutions within unquoted values" $
     let
       expected =
         Right
@@ -99,5 +107,17 @@ tests = describe "settings parser" do
             ]
           ]
       actual = "A=Hello, $(head -n 1 user.txt)!" `runParser` settings
+    in
+      actual `shouldEqual` expected
+
+  it "parses command substitutions within quoted values" $
+    let
+      expected =
+        Right
+          [ Tuple "A" $ ValueExpression
+            [ LiteralValue "Hello, ", CommandSubstitution "head" ["-n", "1", "user.txt"], LiteralValue "!"
+            ]
+          ]
+      actual = "A=\"Hello, $(head -n 1 user.txt)!\"" `runParser` settings
     in
       actual `shouldEqual` expected
