@@ -1,34 +1,31 @@
--- | This module contains data types representing parsed `.env` content and the unmodified environment.
+-- | This module contains data types representing `.env` settings.
 
-module Dotenv.Internal.Types (Environment, Name, Setting, Settings, Value(..)) where
+module Dotenv.Internal.Types where
 
 import Prelude
+import Data.Maybe (Maybe)
 import Data.Tuple (Tuple)
-import Foreign.Object (Object)
 
 -- | The name of a setting
 type Name = String
 
--- | The value of a setting
-data Value
+-- | The expressed value of a setting, which has not been resolved yet
+data UnresolvedValue
   = LiteralValue String
   | VariableSubstitution String
   | CommandSubstitution String (Array String)
-  | ValueExpression (Array Value)
+  | ValueExpression (Array UnresolvedValue)
 
-derive instance eqValue :: Eq Value
+derive instance eqUnresolvedValue :: Eq UnresolvedValue
 
-instance showValue :: Show Value where
+instance showUnresolvedValue :: Show UnresolvedValue where
   show (LiteralValue v) = "(LiteralValue \"" <> v <> "\")"
   show (VariableSubstitution v) = "(VariableSubstitution \"" <> v <> "\")"
   show (CommandSubstitution c a) = "(CommandSubstitution \"" <> c <> " " <> show a <> "\")"
   show (ValueExpression vs) = "(ValueExpression " <> show vs <> ")"
 
--- | The conjunction of a setting name and the corresponding value
-type Setting = Tuple Name Value
+-- | The type of a resolved value
+type ResolvedValue = Maybe String
 
--- | A collection of settings
-type Settings = Array (Tuple Name Value)
-
--- | Environment variables
-type Environment = Object String
+-- | The product of a setting name and the corresponding value
+type Setting v = Tuple Name v

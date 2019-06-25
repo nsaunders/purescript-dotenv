@@ -4,7 +4,7 @@ import Prelude
 import Data.Either (Either(..))
 import Data.Tuple (Tuple(..))
 import Dotenv.Internal.Parse (settings)
-import Dotenv.Internal.Types (Value(..))
+import Dotenv.Internal.Types (UnresolvedValue(..))
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 import Text.Parsing.Parser (runParser)
