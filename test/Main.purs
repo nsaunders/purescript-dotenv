@@ -7,10 +7,10 @@ import Test.Spec.Reporter.Console (consoleReporter)
 import Test.Spec.Runner (runSpec)
 --import Test.Load as Load
 import Test.Parse as Parse
---import Test.Resolve as Resolve
+import Test.Resolve as Resolve
 
 main :: Effect Unit
 main = launchAff_ $ runSpec [ consoleReporter ] do
   --Load.tests
   Parse.tests
-  --Resolve.tests
+  Resolve.tests
