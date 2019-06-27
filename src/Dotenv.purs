@@ -1,54 +1,53 @@
 -- | This is the base module for the Dotenv library.
 
-module Dotenv (module Dotenv.Types, loadFile) where
+module Dotenv (loadFile) where
 
 import Prelude
 import Control.Monad.Error.Class (class MonadThrow, catchError, throwError)
 import Data.Either (either)
-import Data.Maybe (Maybe(..))
-import Data.Traversable (traverse)
-import Data.Tuple (Tuple(..))
+import Data.Maybe (Maybe)
+import Data.Tuple (Tuple)
+import Dotenv.Internal.Apply (applySettings)
+import Dotenv.Internal.ChildProcess (_childProcess, handleChildProcess)
+import Dotenv.Internal.Environment (_environment, handleEnvironment)
 import Dotenv.Internal.Parse (settings) as Parse
-import Dotenv.Internal.Resolve (values) as Resolve
-import Dotenv.Internal.Types (Settings) as Internal
-import Dotenv.Types (Setting, Settings)
+import Dotenv.Internal.Resolve (resolveValues)
+import Dotenv.Internal.Types (Setting) as IT
+import Dotenv.Internal.Types (UnresolvedValue)
 import Effect.Aff.Class (class MonadAff, liftAff)
-import Effect.Class (liftEffect)
 import Effect.Exception (Error, error)
 import Node.Encoding (Encoding(UTF8))
 import Node.FS.Aff (readTextFile)
-import Node.Process (getEnv, lookupEnv, setEnv)
+import Run (case_, interpret, on)
 import Text.Parsing.Parser (parseErrorMessage, runParser)
+
+-- The type of a setting name
+type Name = String
+
+-- The type of a (resolved) value
+type Value = Maybe String
+
+-- The type of a setting
+type Setting = Tuple Name Value
+
+-- The type of settings
+type Settings = Array Setting
 
 -- | Loads the `.env` file into the environment.
 loadFile :: forall m. MonadAff m => MonadThrow Error m => m Settings
-loadFile = (Resolve.values <$> liftEffect getEnv <*> (readSettings >>= parseSettings)) >>= applySettings
+loadFile = readDotenv
+       >>= (flip runParser Parse.settings >>> either (parseErrorMessage >>> error >>> throwError) pure)
+        >>= processSettings
 
 -- | Reads the `.env` file.
-readSettings :: forall m. MonadAff m => m String
-readSettings = liftAff $ readTextFile UTF8 ".env"
-                       # flip catchError (const $ pure "")
+readDotenv :: forall m. MonadAff m => m String
+readDotenv = liftAff $ readTextFile UTF8 ".env"
+                     # flip catchError (const $ pure "")
 
--- | Parses the contents of a `.env` file.
-parseSettings :: forall m. MonadThrow Error m => String -> m Internal.Settings
-parseSettings settings = runParser settings Parse.settings
-  # either (throwError <<< error <<< append "Invalid .env file: " <<< parseErrorMessage) pure
-
--- | Applies the specified settings to the environment.
-applySettings :: forall m. MonadAff m => Settings -> m Settings
-applySettings = traverse applySetting
-
--- | Applies the specified setting to the environment.
-applySetting :: forall m. MonadAff m => Setting -> m Setting
-applySetting setting@(Tuple key settingValue) = do
-  envValue <- liftEffect $ lookupEnv key
-  case envValue of
-    Just value ->
-      pure $ Tuple key $ Just value
-    Nothing ->
-      case settingValue of
-        Just value -> do
-          liftEffect $ setEnv key value
-          pure setting
-        Nothing ->
-          pure setting
+processSettings :: forall m. MonadAff m => Array (IT.Setting UnresolvedValue) -> m Settings
+processSettings = (resolveValues >=> applySettings) >>> interpret
+  ( case_
+    # on _childProcess handleChildProcess
+    # on _environment handleEnvironment
+  )
+  >>> liftAff
