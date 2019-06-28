@@ -37,7 +37,7 @@ type Settings = Array Setting
 loadFile :: forall m. MonadAff m => MonadThrow Error m => m Settings
 loadFile = readDotenv
        >>= (flip runParser Parse.settings >>> either (parseErrorMessage >>> error >>> throwError) pure)
-        >>= processSettings
+       >>= processSettings
 
 -- | Reads the `.env` file.
 readDotenv :: forall m. MonadAff m => m String
