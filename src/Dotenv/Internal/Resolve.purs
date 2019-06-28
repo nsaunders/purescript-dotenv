@@ -1,6 +1,6 @@
--- | This module contains the logic for resolving `.env` values.
+-- | This module encapsulates the logic for resolving `.env` values.
 
-module Dotenv.Internal.Resolve where
+module Dotenv.Internal.Resolve (resolveValues) where
 
 import Prelude
 import Data.Array (unzip, zip)

@@ -46,9 +46,10 @@ readDotenv = liftAff $ readTextFile UTF8 ".env"
 
 -- | Processes settings by resolving their values and then applying them to the environment.
 processSettings :: forall m. MonadAff m => Array (IT.Setting UnresolvedValue) -> m Settings
-processSettings = (resolveValues >=> applySettings) >>> interpret
-  ( case_
-    # on _childProcess handleChildProcess
-    # on _environment handleEnvironment
-  )
+processSettings = (resolveValues >=> applySettings)
+  >>> interpret
+    ( case_
+      # on _childProcess handleChildProcess
+      # on _environment handleEnvironment
+    )
   >>> liftAff

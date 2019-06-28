@@ -1,6 +1,6 @@
 -- | This module contains data types representing `.env` settings.
 
-module Dotenv.Internal.Types where
+module Dotenv.Internal.Types (Name, ResolvedValue, Setting, UnresolvedValue(..)) where
 
 import Prelude
 import Data.Maybe (Maybe)

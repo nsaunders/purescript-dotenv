@@ -1,7 +1,7 @@
 module Main where
 
 import Prelude
-import Dotenv.Internal.Load (loadFile) as Dotenv
+import Dotenv (loadFile) as Dotenv
 import Effect (Effect)
 import Effect.Aff (launchAff_)
 import Effect.Class (liftEffect)

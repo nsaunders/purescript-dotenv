@@ -56,7 +56,8 @@ commandSubstitution = do
 quotedValue :: Char -> Parser String UnresolvedValue
 quotedValue q =
   let
-    literal = LiteralValue <<< fromCharArray <$> some (noneOf ['$', q] <|> try (char '$' <* notFollowedBy (oneOf ['{', '('])))
+    literal =
+      LiteralValue <<< fromCharArray <$> some (noneOf ['$', q] <|> try (char '$' <* notFollowedBy (oneOf ['{', '('])))
   in
     valueFromValues <$> (char q *> (some $ variableSubstitution <|> commandSubstitution <|> literal) <* char q)
 
