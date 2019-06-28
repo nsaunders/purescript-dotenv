@@ -44,6 +44,7 @@ readDotenv :: forall m. MonadAff m => m String
 readDotenv = liftAff $ readTextFile UTF8 ".env"
                      # flip catchError (const $ pure "")
 
+-- | Processes settings by resolving their values and then applying them to the environment.
 processSettings :: forall m. MonadAff m => Array (IT.Setting UnresolvedValue) -> m Settings
 processSettings = (resolveValues >=> applySettings) >>> interpret
   ( case_
