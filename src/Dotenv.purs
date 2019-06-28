@@ -21,16 +21,16 @@ import Node.FS.Aff (readTextFile)
 import Run (case_, interpret, on)
 import Text.Parsing.Parser (parseErrorMessage, runParser)
 
--- The type of a setting name
+-- | The type of a setting name
 type Name = String
 
--- The type of a (resolved) value
+-- | The type of a (resolved) value
 type Value = Maybe String
 
--- The type of a setting
+-- | The type of a setting
 type Setting = Tuple Name Value
 
--- The type of settings
+-- | The type of settings
 type Settings = Array Setting
 
 -- | Loads the `.env` file into the environment.
