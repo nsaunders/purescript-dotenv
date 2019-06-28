@@ -42,7 +42,7 @@ configuration =
   ]
 
 commands :: Map (Tuple String (Array String)) String
-commands = singleton (Tuple "whoami" []) "user"
+commands = singleton (Tuple "whoami" []) "user\n"
 
 variables :: Map String String
 variables = singleton "DB_PASSWORD" "p4s5w0rD!"

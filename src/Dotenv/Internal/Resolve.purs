@@ -6,7 +6,7 @@ import Prelude
 import Data.Array (unzip, zip)
 import Data.Foldable (find)
 import Data.Maybe (Maybe(..))
-import Data.String (joinWith)
+import Data.String (joinWith, trim)
 import Data.Traversable (sequence, traverse)
 import Data.Tuple (Tuple(..), fst, snd)
 import Dotenv.Internal.ChildProcess (CHILD_PROCESS, spawn)
@@ -24,7 +24,7 @@ resolveValue settings = case _ of
     pure $ Just value
   CommandSubstitution cmd args -> do
     value <- spawn cmd args
-    pure $ Just value
+    pure $ Just (trim value)
   VariableSubstitution var -> do
     envValueMaybe <- lookupEnv var
     case envValueMaybe of
