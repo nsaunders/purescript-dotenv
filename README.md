@@ -13,17 +13,23 @@ A ```.env``` file looks like this:
 
 ```
 DB_HOST=127.0.0.1
-DB_USER=happydude
-DB_NAME=happydude
-DB_CONNECTION_STRING=postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}
+DB_NAME=myappdb
+DB_CONNECTION_STRING=postgresql://$(whoami):${DB_PASS}@${DB_HOST}/${DB_NAME}
 ```
 
-_Note: In the above example, you might notice that ```DB_PASS``` interpolated into the ```DB_CONNECTION_STRING``` value, is missing. This, then, would require the ```DB_PASS``` environment variable to be provided at runtime._
+_Note: `DB_CONNECTION_STRING` in the above example demonstrates command and variable substitution. `$(whoami)` will
+resolve to the result of running the [`whoami`](http://man7.org/linux/man-pages/man1/whoami.1.html) command, while
+`${DB_PASS}` will resolve to the value of the `DB_PASS` environment variable (which also could have been set elsewhere in
+the `.env` file)._
 
 ### Example
-To run the [example](example/Main.purs):
+To run the [example](example/Main.purs) using [Pulp](https://github.com/purescript-contrib/pulp):
 ```
 pulp run -I example
+```
+Or using [Spago](https://github.com/spacchetti/spago):
+```
+spago run -p example/Main.purs
 ```
 
 ### Other ```dotenv``` implementations
