@@ -4,7 +4,7 @@ import Prelude
 import Data.Either (Either(..))
 import Data.Tuple (Tuple(..))
 import Dotenv.Internal.Parse (settings)
-import Dotenv.Internal.Types (Value(..))
+import Dotenv.Internal.Types (UnresolvedValue(..))
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
 import Text.Parsing.Parser (runParser)
@@ -82,10 +82,42 @@ tests = describe "settings parser" do
     in
       actual `shouldEqual` expected
 
-  it "parses variable substitutions" $
+  it "parses variable substitutions within unquoted values" $
     let
       expected =
         Right [ Tuple "A" $ ValueExpression [ LiteralValue "Hi, ", VariableSubstitution "USER", LiteralValue "!" ] ]
       actual = "A=Hi, ${USER}!" `runParser` settings
+    in
+      actual `shouldEqual` expected
+
+  it "parses variable substitutions within quoted values" $
+    let
+      expected =
+        Right [ Tuple "A" $ ValueExpression [ LiteralValue "Hi, ", VariableSubstitution "USER", LiteralValue "!" ] ]
+      actual = "A=\"Hi, ${USER}!\"" `runParser` settings
+    in
+      actual `shouldEqual` expected
+
+  it "parses command substitutions within unquoted values" $
+    let
+      expected =
+        Right
+          [ Tuple "A" $ ValueExpression
+            [ LiteralValue "Hello, ", CommandSubstitution "head" ["-n", "1", "user.txt"], LiteralValue "!"
+            ]
+          ]
+      actual = "A=Hello, $(head -n 1 user.txt)!" `runParser` settings
+    in
+      actual `shouldEqual` expected
+
+  it "parses command substitutions within quoted values" $
+    let
+      expected =
+        Right
+          [ Tuple "A" $ ValueExpression
+            [ LiteralValue "Hello, ", CommandSubstitution "head" ["-n", "1", "user.txt"], LiteralValue "!"
+            ]
+          ]
+      actual = "A=\"Hello, $(head -n 1 user.txt)!\"" `runParser` settings
     in
       actual `shouldEqual` expected

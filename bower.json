@@ -25,12 +25,14 @@
   "dependencies": {
     "purescript-console": "^4.2.0",
     "purescript-effect": "^2.0.1",
+    "purescript-node-fs-aff": "^6.0.0",
     "purescript-node-process": "^7.0.0",
     "purescript-parsing": "^5.0.3",
-    "purescript-node-fs-aff": "^6.0.0"
+    "purescript-run": "^3.0.1",
+    "purescript-sunde": "^2.0.0"
   },
   "devDependencies": {
     "purescript-psci-support": "^4.0.0",
-    "purescript-spec": "^4.0.0-rc.1"
+    "purescript-spec": "^4.0.0"
   }
 }
