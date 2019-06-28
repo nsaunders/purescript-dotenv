@@ -1,6 +1,6 @@
 -- | This is the base module for the Dotenv library.
 
-module Dotenv (loadFile) where
+module Dotenv (Name, Setting, Settings, Value, loadFile) where
 
 import Prelude
 import Control.Monad.Error.Class (class MonadThrow, catchError, throwError)
