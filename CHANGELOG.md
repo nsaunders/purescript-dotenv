@@ -1,5 +1,8 @@
 # Changelog
 
+*0.4.0*
+* Added support for command substitution.
+
 *0.3.0*
 * Updated library to support new PureScript compiler version 0.13.
 * Migrated to Spago for dev/CI.
