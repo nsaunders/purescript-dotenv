@@ -23,7 +23,7 @@ resolve to the result of running the [`whoami`](http://man7.org/linux/man-pages/
 the `.env` file)._
 
 ### Example
-To run the [example](example/Main.purs) ([see corresponding `.env` file](.env)) using [Pulp](https://github.com/purescript-contrib/pulp):
+To run the example ([code](example/Main.purs), [`.env`](.env)) using [Pulp](https://github.com/purescript-contrib/pulp):
 ```
 pulp run -I example
 ```
