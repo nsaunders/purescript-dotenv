@@ -75,7 +75,7 @@ lookupSetting :: String -> Array (Setting ResolvedValue) -> ResolvedValue
 lookupSetting name = join <<< map snd <<< find (eq name <<< fst)
 
 tests :: Spec Unit
-tests = describe "value resolver" do
+tests = describe "resolveValues" do
 
   before (flip lookupSetting <$> resolve configuration) do
 

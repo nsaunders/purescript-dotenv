@@ -10,7 +10,7 @@ import Test.Spec.Assertions (shouldEqual)
 import Text.Parsing.Parser (runParser)
 
 tests :: Spec Unit
-tests = describe "settings parser" do
+tests = describe "settings (parser)" do
 
   it "skips blank lines" $
     let
