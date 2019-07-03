@@ -11,7 +11,7 @@ Simply place your `.env` configuration file in the root of your project (ensurin
 
 ### Configuration Format
 
-The `.env` file may generally define one environment variable setting per line in the format `VARIABLE_NAME=value`. Here's a trivial example:
+The `.env` file may generally define one environment variable setting per line in the format `VARIABLE_NAME=value`. Here is a trivial example:
 
 ```
 EMAIL_FROM=noreply@my.app
