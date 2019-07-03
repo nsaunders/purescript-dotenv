@@ -11,5 +11,6 @@ import Node.Process (lookupEnv)
 main :: Effect Unit
 main = launchAff_ do
   _ <- Dotenv.loadFile
-  testVar <- liftEffect $ lookupEnv "TEST_VAR"
-  liftEffect $ logShow testVar
+  liftEffect do
+    testVar <- lookupEnv "TEST_VAR"
+    logShow testVar
