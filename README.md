@@ -56,7 +56,7 @@ DB_CONN_STR=postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}
 
 #### Command Substitution
 
-The stdout of a command can also be interpolated into a setting value using the `$(command)` syntax. The following example varies from the variable substitution example above by interpolating the output of the [`whoami`](http://man7.org/linux/man-pages/man1/whoami.1.html) command into the database connection string instead of a `DB_USER` setting:
+The standard output of a command can also be interpolated into a setting value using the `$(command)` syntax. The following example differs from the variable substitution example above by interpolating the output of the [`whoami`](http://man7.org/linux/man-pages/man1/whoami.1.html) command into the database connection string instead of a `DB_USER` setting:
 
 ```
 DB_HOST=127.0.0.1
