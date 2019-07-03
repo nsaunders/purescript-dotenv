@@ -32,19 +32,19 @@ First, place a `.env` file in the root of your project directory. See the [Confi
 
 Next, import the `Dotenv` module at the entry point of your program (i.e. `Main.purs`):
 
-```haskell
+```purescript
 import Dotenv (loadFile) as Dotenv
 ```
 
 The `loadFile` function is designed to run in [`Aff`](http://github.com/slamdata/purescript-aff), so you will also need to import something like `launchAff_`:
 
-```haskell
+```purescript
 import Effect.Aff (launchAff_)
 ```
 
 Finally, call the `loadFile` function in your `main` function before the rest of your program logic:
 
-```haskell
+```purescript
 main :: Effect Unit
 main = launchAff_ do
   _ <- Dotenv.loadFile
@@ -52,6 +52,8 @@ main = launchAff_ do
     testVar <- lookupEnv "TEST_VAR"
     logShow testVar
 ```
+
+For a complete example, see [example/Main.purs](example/Main.purs) and the corresponding [.env file](.env).
 
 ### Configuration Format
 
