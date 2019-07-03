@@ -64,6 +64,8 @@ DB_NAME=myappdb
 DB_CONN_STR=postgresql://$(whoami):${DB_PASS}@${DB_HOST}/${DB_NAME}
 ```
 
+#### Additional Parsing Rules
+
 For a complete specification of parsing rules, please see the [parser tests](test/Parse.purs).
 
 ### Example
