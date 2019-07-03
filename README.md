@@ -115,11 +115,16 @@ DB_CONN_STR=postgresql://$(whoami):${DB_PASS}@${DB_HOST}/${DB_NAME}
 For a complete specification of parsing rules, please see the [parser tests](test/Parse.purs).
 
 ### Example
-To run the example ([code](example/Main.purs), [`.env`](.env)) using [Pulp](https://github.com/purescript-contrib/pulp):
+
+To run the example, clone the repository and run one of the following depending on your package manager and build tool.
+
+[bower](https://github.com/bower/bower) + [pulp](http://github.com/purescript-contrib/pulp):
 ```
+bower install
 pulp run -I example
 ```
-Or using [Spago](https://github.com/spacchetti/spago):
+
+[spago](https://github.com/spacchetti/spago):
 ```
 spago run -p example/Main.purs
 ```
