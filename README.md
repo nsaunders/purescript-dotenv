@@ -9,6 +9,50 @@ By allowing a configuration file to be consumed through the [`purescript-node-pr
 
 Simply place your `.env` configuration file in the root of your project (ensuring for security reasons not to commit it), and then call `Dotenv.loadFile` at the beginning of your program. Environment variable lookups throughout your program will then fall back to the values defined in `.env`.
 
+### Installation
+
+[bower](https://github.com/bower/bower):
+```
+bower install --save purescript-dotenv
+```
+
+[psc-package](https://github.com/purescript/psc-package):
+```
+psc-package install dotenv
+```
+
+[spago](https://github.com/spacchetti/spago):
+```
+spago install dotenv
+```
+
+### Usage
+
+First, place a `.env` file in the root of your project directory. See the [Configuration Format](#configuration-format) section for more information.
+
+Next, import the `Dotenv` module at the entry point of your program (i.e. `Main.purs`):
+
+```haskell
+import Dotenv (loadFile) as Dotenv
+```
+
+The `loadFile` function is designed to run in [`Aff`](http://github.com/slamdata/purescript-aff), so you will also need to import something like `launchAff_`:
+
+```haskell
+import Effect.Aff (launchAff_)
+```
+
+Finally, call the `loadFile` function in your `main` function before the rest of your program logic:
+
+```haskell
+main :: Effect Unit
+main = launchAff_ do
+  _ <- Dotenv.loadFile
+  liftEffect do
+    testVar <- lookupEnv "TEST_VAR"
+    logShow testVar
+```
+
 ### Configuration Format
 
 The `.env` file may generally define one environment variable setting per line in the format `VARIABLE_NAME=value`. Here is a trivial example:
