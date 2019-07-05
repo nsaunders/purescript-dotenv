@@ -42,7 +42,7 @@ The `loadFile` function is designed to run in [`Aff`](http://github.com/slamdata
 import Effect.Aff (launchAff_)
 ```
 
-Finally, call the `loadFile` function in your `main` function before the rest of your program logic:
+Finally, call the `loadFile` function from your `main` function before the rest of your program logic:
 
 ```purescript
 main :: Effect Unit
@@ -80,7 +80,7 @@ GREETING=Hello, Sailor! # A friendly greeting
 Setting values may be wrapped with single or double quotes. This is required when the value contains a `#` character so that it is not treated as a comment. It is also necessary when the value includes line breaks. For example:
 
 ```
-SUBJECT="The #1 reason you're not rich"
+SUBJECT="This one weird trick will double your productivity"
 MESSAGE="Dear friend,
 
 Insert compelling message here.
