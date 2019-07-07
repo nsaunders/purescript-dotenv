@@ -1,4 +1,4 @@
-# purescript-dotenv ![build status](https://img.shields.io/travis/nsaunders/purescript-dotenv.svg) [![purescript-dotenv on Pursuit](https://pursuit.purescript.org/packages/purescript-dotenv/badge)](https://pursuit.purescript.org/packages/purescript-dotenv) [![dotenv in package-sets](https://badgen.net/runkit/package-sets-badge-c6vmzzh0d2fw/dotenv)](https://github.com/purescript/package-sets)
+# purescript-dotenv ![build status](https://img.shields.io/travis/nsaunders/purescript-dotenv.svg) [![purescript-dotenv on Pursuit](https://pursuit.purescript.org/packages/purescript-dotenv/badge)](https://pursuit.purescript.org/packages/purescript-dotenv) [![dotenv in package-sets](https://badgen.net/runkit/package-sets-badge-nr5a9o4jjciz/dotenv)](https://github.com/purescript/package-sets)
 ## Load environment variables from a ```.env``` file.
 
 <img src="https://raw.githubusercontent.com/nsaunders/purescript-dotenv/master/img/readme.png" alt="purescript-dotenv" align="right" />
