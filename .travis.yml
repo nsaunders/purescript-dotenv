@@ -2,8 +2,20 @@ language: node_js
 dist: trusty
 sudo: required
 node_js: stable
+
+env:
+  - PATH=$HOME:$HOME/purescript:$PATH
+
 install:
-  - npm install -g bower@^1.8.8 purescript@^0.13.0 pulp@^13.0.0 spago@^0.8.3
+  - PURS_VER=v0.13.0
+  - SPAGO_VER=0.8.5.0
+  - wget -O $HOME/purescript.tar.gz https://github.com/purescript/purescript/releases/download/$PURS_VER/linux64.tar.gz
+  - wget -O $HOME/spago.tar.gz https://github.com/spacchetti/spago/releases/download/0.8.5.0/linux.tar.gz
+  - tar -xvf $HOME/purescript.tar.gz -C $HOME/
+  - tar -xvf $HOME/spago.tar.gz -C $HOME/
+  - chmod a+x $HOME/purescript/purs
+  - chmod a+x $HOME/spago
+  - npm install -g bower@^1.8.8 pulp@^13.0.0
   - spago install
   - bower install
 script:
