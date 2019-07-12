@@ -1,5 +1,9 @@
 # Changelog
 
+*1.0.0*
+- Run `loadFile` in `Aff` instead of an abstraction.
+- Documentation updates
+
 *0.4.1*
 * Documentation fixes
 
