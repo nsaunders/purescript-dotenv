@@ -36,7 +36,7 @@ Next, import the `Dotenv` module at the entry point of your program (i.e. `Main.
 import Dotenv (loadFile) as Dotenv
 ```
 
-The `loadFile` function is designed to run in [`Aff`](http://github.com/slamdata/purescript-aff), so you will also need to import something like `launchAff_`:
+The `loadFile` function runs in [`Aff`](https://pursuit.purescript.org/packages/purescript-aff/5.1.1/docs/Effect.Aff#t:Aff), so you will also need to import something like [`launchAff_`](https://pursuit.purescript.org/packages/purescript-aff/5.1.1/docs/Effect.Aff#v:launchAff_):
 
 ```purescript
 import Effect.Aff (launchAff_)
