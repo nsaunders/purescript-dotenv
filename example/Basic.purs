@@ -1,4 +1,4 @@
-module Main where
+module Example.Basic (main) where
 
 import Prelude
 import Dotenv (loadFile) as Dotenv
@@ -12,5 +12,5 @@ main :: Effect Unit
 main = launchAff_ do
   _ <- Dotenv.loadFile
   liftEffect do
-    testVar <- lookupEnv "TEST_VAR"
-    logShow testVar
+    greeting <- lookupEnv "GREETING"
+    logShow greeting
