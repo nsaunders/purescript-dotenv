@@ -12,5 +12,5 @@ main :: Effect Unit
 main = launchAff_ do
   _ <- Dotenv.loadFile
   liftEffect do
-    testVar <- lookupEnv "GREETING"
-    logShow testVar
+    greeting <- lookupEnv "GREETING"
+    logShow greeting
