@@ -1,0 +1,27 @@
+{
+    "name": "purescript-dotenv",
+    "license": [
+        "MIT"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nsaunders/purescript-dotenv.git"
+    },
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "output"
+    ],
+    "dependencies": {
+        "purescript-console": "^v4.4.0",
+        "purescript-effect": "^v2.0.1",
+        "purescript-node-fs-aff": "^v6.0.0",
+        "purescript-node-process": "^v7.0.0",
+        "purescript-parsing": "^v5.0.3",
+        "purescript-psci-support": "^v4.0.0",
+        "purescript-run": "^v3.0.1",
+        "purescript-spec": "^v4.0.1",
+        "purescript-sunde": "^v2.0.0"
+    }
+}
