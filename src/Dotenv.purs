@@ -1,6 +1,6 @@
 -- | This is the base module for the Dotenv library.
 
-module Dotenv (Name, Setting, Settings, Value, loadFile) where
+module Dotenv (Name, Setting, Settings, Value, loadFile, loadContents) where
 
 import Prelude
 import Control.Monad.Error.Class (catchError, throwError)
@@ -35,14 +35,22 @@ type Settings = Array Setting
 
 -- | Loads the `.env` file into the environment.
 loadFile :: Aff Settings
-loadFile = readDotenv
-       >>= (flip runParser Parse.settings >>> either (parseErrorMessage >>> error >>> throwError) pure)
-       >>= processSettings
+loadFile = readDotenv >>= parseSettings >>= processSettings
+
+-- | Loads a `.env`-compatible string into the environment. This is useful when
+-- | sourcing configuration from somewhere other than a local `.env` file.
+loadContents :: String -> Aff Settings
+loadContents = parseSettings >=> processSettings
 
 -- | Reads the `.env` file.
 readDotenv :: Aff String
 readDotenv = readTextFile UTF8 ".env"
            # flip catchError (const $ pure "")
+
+-- | Parses settings, mapping the result to `Aff`.
+parseSettings :: String -> Aff (Array (IT.Setting UnresolvedValue))
+parseSettings = flip runParser Parse.settings
+                >>> either (parseErrorMessage >>> error >>> throwError) pure
 
 -- | Processes settings by resolving their values and then applying them to the environment.
 processSettings :: Array (IT.Setting UnresolvedValue) -> Aff Settings
