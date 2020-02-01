@@ -1,5 +1,8 @@
 # Changelog
 
+*1.1.0*
+- Add `loadContents` function.
+
 *1.0.0*
 - Run `loadFile` in `Aff` instead of an abstraction.
 - Documentation updates
