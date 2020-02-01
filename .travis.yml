@@ -7,8 +7,8 @@ env:
   - PATH=$HOME:$HOME/purescript:$PATH
 
 install:
-  - PURS_VER=v0.13.3
-  - SPAGO_VER=0.10.0.0
+  - PURS_VER=v0.13.6
+  - SPAGO_VER=0.12.1.0
   - wget -O $HOME/purescript.tar.gz https://github.com/purescript/purescript/releases/download/$PURS_VER/linux64.tar.gz
   - wget -O $HOME/spago.tar.gz https://github.com/spacchetti/spago/releases/download/$SPAGO_VER/linux.tar.gz
   - tar -xvf $HOME/purescript.tar.gz -C $HOME/
