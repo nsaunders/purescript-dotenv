@@ -2,6 +2,8 @@
     [ "src/**/*.purs", "test/**/*.purs" ]
 , name =
     "dotenv"
+, license = "MIT"
+, repository = "https://github.com/nsaunders/purescript-dotenv.git"
 , dependencies =
     [ "console"
     , "effect"
