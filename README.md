@@ -53,7 +53,7 @@ main = launchAff_ do
     logShow testVar
 ```
 
-For a complete example, see [example/Main.purs](example/Main.purs) and the corresponding [.env file](.env).
+For a complete example, see [example/Basic.purs](example/Basic.purs) and the corresponding [.env file](.env).
 
 ### Configuration Format
 
