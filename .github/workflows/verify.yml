@@ -13,3 +13,4 @@ jobs:
       - uses: asdf-vm/actions/install@v1
       - run: spago build --path example/**/*.purs
       - run: spago test
+      - run: for example in $(ls example); do spago run -m Example.${example%.*} -p example/$example; done
