@@ -15,7 +15,6 @@ import Effect.Aff (Aff)
 import Effect.Class (liftEffect)
 import Node.Process (lookupEnv, setEnv) as P
 import Run (Run, lift)
-import Type.Proxy (Proxy)
 
 -- | A data type representing the supported operations.
 data EnvironmentF a

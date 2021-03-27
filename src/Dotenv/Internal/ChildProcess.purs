@@ -11,7 +11,6 @@ import Effect.Exception (error)
 import Node.ChildProcess (Exit(..), defaultSpawnOptions)
 import Run (Run, lift)
 import Sunde (spawn) as Sunde
-import Type.Proxy (Proxy)
 
 -- | A data type representing the supported operations
 data ChildProcessF a = Spawn String (Array String) (String -> a)
