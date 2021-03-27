@@ -6,6 +6,7 @@ import Prelude
 import Control.Monad.Error.Class (catchError, throwError)
 import Data.Either (either)
 import Data.Maybe (Maybe)
+import Data.String.Common (trim)
 import Data.Tuple (Tuple)
 import Dotenv.Internal.Apply (applySettings)
 import Dotenv.Internal.ChildProcess (_childProcess, handleChildProcess)
@@ -44,7 +45,7 @@ loadContents = parseSettings >=> processSettings
 
 -- | Reads the `.env` file.
 readDotenv :: Aff String
-readDotenv = readTextFile UTF8 ".env"
+readDotenv = (trim <$> readTextFile UTF8 ".env")
            # flip catchError (const $ pure "")
 
 -- | Parses settings, mapping the result to `Aff`.

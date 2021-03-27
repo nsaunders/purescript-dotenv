@@ -19,7 +19,7 @@ settings = [ Tuple "VAR_ONE" $ Just "one", Tuple "VAR_TWO" $ Just "two" ]
 predefinedVariables :: Map String String
 predefinedVariables = singleton "VAR_TWO" "2" # insert "VAR_THREE" "3"
 
-handleEnvironment :: forall r. EnvironmentF ~> Run (writer :: WRITER (Array (Tuple String String)) | r)
+handleEnvironment :: forall r. EnvironmentF ~> Run (WRITER (Array (Tuple String String)) r)
 handleEnvironment =
   case _ of
     LookupEnv name callback ->

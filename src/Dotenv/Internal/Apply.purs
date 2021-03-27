@@ -14,7 +14,7 @@ import Run (Run)
 applySettings
   :: forall r
    . Array (Setting ResolvedValue)
-  -> Run (environment :: ENVIRONMENT | r) (Array (Setting ResolvedValue))
+  -> Run (ENVIRONMENT r) (Array (Setting ResolvedValue))
 applySettings = traverse \(Tuple name resolvedValue) -> do
   currentValue <- lookupEnv name
   if isJust currentValue

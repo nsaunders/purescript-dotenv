@@ -15,7 +15,7 @@ import Dotenv.Internal.Types (ResolvedValue, Setting, UnresolvedValue(..))
 import Run (Run)
 
 -- | A row that tracks the effects involved in value resolution
-type Resolution r = (childProcess :: CHILD_PROCESS, environment :: ENVIRONMENT | r)
+type Resolution r = CHILD_PROCESS (ENVIRONMENT r)
 
 -- | Resolves a value according to its expression.
 resolveValue :: forall r. Array (Setting UnresolvedValue) -> UnresolvedValue -> Run (Resolution r) ResolvedValue
