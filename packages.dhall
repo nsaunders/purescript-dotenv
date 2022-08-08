@@ -8,7 +8,7 @@ let additions =
       { sunde =
         { dependencies = [ "aff", "effect", "node-child-process", "prelude" ]
         , repo = "https://github.com/justinwoo/purescript-sunde.git"
-        , version = "master"
+        , version = "v3.0.0"
         }
       }
 
