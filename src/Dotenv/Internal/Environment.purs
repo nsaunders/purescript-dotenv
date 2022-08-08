@@ -10,11 +10,11 @@ module Dotenv.Internal.Environment
 
 import Prelude
 import Data.Maybe (Maybe)
-import Data.Symbol (SProxy(..))
 import Effect.Aff (Aff)
 import Effect.Class (liftEffect)
 import Node.Process (lookupEnv, setEnv) as P
 import Run (Run, lift)
+import Type.Proxy (Proxy(..))
 
 -- | A data type representing the supported operations.
 data EnvironmentF a
@@ -24,7 +24,7 @@ data EnvironmentF a
 derive instance functorEnvironmentF :: Functor EnvironmentF
 
 -- The effect label used for reading or modifying the environment.
-_environment = SProxy :: SProxy "environment"
+_environment = Proxy :: Proxy "environment"
 
 -- | The effect type used for reading or modifying the environment
 type ENVIRONMENT r = (environment :: EnvironmentF | r)

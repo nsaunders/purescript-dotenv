@@ -14,14 +14,24 @@
         "output"
     ],
     "dependencies": {
-        "purescript-console": "^v5.0.0",
-        "purescript-effect": "^v3.0.0",
-        "purescript-node-fs-aff": "^v7.0.0",
-        "purescript-node-process": "^v8.1.0",
-        "purescript-parsing": "^v6.0.0",
-        "purescript-psci-support": "^v5.0.0",
-        "purescript-run": "^v4.0.0",
-        "purescript-spec": "^v5.0.0",
-        "purescript-sunde": "^v2.0.0"
+        "purescript-aff": "^v7.0.0",
+        "purescript-arrays": "^v7.0.0",
+        "purescript-control": "^v6.0.0",
+        "purescript-effect": "^v4.0.0",
+        "purescript-either": "^v6.1.0",
+        "purescript-exceptions": "^v6.0.0",
+        "purescript-foldable-traversable": "^v6.0.0",
+        "purescript-maybe": "^v6.0.0",
+        "purescript-node-buffer": "^v8.0.0",
+        "purescript-node-child-process": "^v9.0.0",
+        "purescript-node-fs-aff": "^v9.0.0",
+        "purescript-node-process": "^v10.0.0",
+        "purescript-parsing": "^v10.0.0",
+        "purescript-prelude": "^v6.0.0",
+        "purescript-run": "^v5.0.0",
+        "purescript-strings": "^v6.0.0",
+        "purescript-sunde": "^v3.0.0",
+        "purescript-transformers": "^v6.0.0",
+        "purescript-tuples": "^v7.0.0"
     }
 }

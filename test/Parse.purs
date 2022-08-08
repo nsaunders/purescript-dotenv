@@ -7,7 +7,7 @@ import Dotenv.Internal.Parse (settings)
 import Dotenv.Internal.Types (UnresolvedValue(..))
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
-import Text.Parsing.Parser (runParser)
+import Parsing (runParser)
 
 tests :: Spec Unit
 tests = describe "settings (parser)" do

@@ -11,6 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: asdf-vm/actions/install@v1
-      - run: spago build --path example/**/*.purs
-      - run: spago test
+      - run: spago -x spago.example.dhall build
+      - run: spago -x spago.test.dhall test
       - run: for example in $(ls example); do spago run -m Example.${example%.*} -p example/$example; done
