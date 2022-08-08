@@ -3,16 +3,18 @@
 module Dotenv.Internal.Parse where
 
 import Prelude hiding (between)
+
 import Control.Alt ((<|>))
 import Data.Array ((:), fromFoldable, head, length, many, some)
 import Data.Maybe (fromMaybe)
 import Data.String.CodeUnits (fromCharArray)
 import Data.Tuple (Tuple(..))
 import Dotenv.Internal.Types (Name, Setting, UnresolvedValue(..))
-import Text.Parsing.Parser (Parser)
-import Text.Parsing.Parser.Combinators ((<?>), lookAhead, notFollowedBy, skipMany, sepEndBy, try)
-import Text.Parsing.Parser.String (char, noneOf, oneOf, string, whiteSpace)
-import Text.Parsing.Parser.Token (alphaNum)
+import Parsing (Parser)
+import Parsing.Combinators ((<?>), lookAhead, notFollowedBy, skipMany, sepEndBy, try)
+import Parsing.String (char, string)
+import Parsing.String.Basic (noneOf, oneOf, whiteSpace)
+import Parsing.Token (alphaNum)
 
 -- | Newline characters (carriage return / line feed)
 newlineChars :: Array Char
@@ -47,8 +49,8 @@ variableSubstitution =
 commandSubstitution :: Parser String UnresolvedValue
 commandSubstitution = do
   _ <- string "$("
-  command <- fromCharArray <$> (some $ noneOf (')' : whitespaceChars))
-  arguments <- many $ whiteSpace *> (fromCharArray <$> (some $ noneOf (')' : whitespaceChars)))
+  command <- fromCharArray <$> (some (noneOf (')' : whitespaceChars)))
+  arguments <- many (whiteSpace *> (fromCharArray <$> (some (noneOf (')' : whitespaceChars)))))
   _ <- whiteSpace *> char ')'
   pure $ CommandSubstitution command arguments
 

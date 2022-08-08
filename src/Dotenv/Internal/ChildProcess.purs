@@ -5,12 +5,12 @@ module Dotenv.Internal.ChildProcess (CHILD_PROCESS, ChildProcessF(..), _childPro
 import Prelude
 import Control.Monad.Error.Class (throwError)
 import Data.Maybe (Maybe(Nothing))
-import Data.Symbol (SProxy(..))
 import Effect.Aff (Aff)
 import Effect.Exception (error)
 import Node.ChildProcess (Exit(..), defaultSpawnOptions)
 import Run (Run, lift)
 import Sunde (spawn) as Sunde
+import Type.Proxy (Proxy(..))
 
 -- | A data type representing the supported operations
 data ChildProcessF a = Spawn String (Array String) (String -> a)
@@ -18,7 +18,7 @@ data ChildProcessF a = Spawn String (Array String) (String -> a)
 derive instance functorChildProcessF :: Functor ChildProcessF
 
 -- | The effect label used for a child process
-_childProcess = SProxy :: SProxy "childProcess"
+_childProcess = Proxy :: Proxy "childProcess"
 
 -- | The effect type used for a child process
 type CHILD_PROCESS r = (childProcess :: ChildProcessF | r)

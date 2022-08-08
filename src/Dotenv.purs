@@ -20,7 +20,7 @@ import Effect.Exception (error)
 import Node.Encoding (Encoding(UTF8))
 import Node.FS.Aff (readTextFile)
 import Run (case_, interpret, on)
-import Text.Parsing.Parser (parseErrorMessage, runParser)
+import Parsing (parseErrorMessage, runParser)
 
 -- | The type of a setting name
 type Name = String
