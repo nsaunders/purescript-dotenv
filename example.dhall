@@ -1,7 +1,7 @@
 let conf = ./spago.dhall
 
 in conf // {
-  sources = conf.sources # [ "example/**/*.purs" ],
+  sources = conf.sources # [ "examples/**/*.purs" ],
   dependencies = conf.dependencies # 
     [ "console"
     , "foreign-object"

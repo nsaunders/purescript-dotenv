@@ -1,9 +1,9 @@
-# purescript-dotenv [![Build](https://github.com/nsaunders/purescript-dotenv/workflows/Build/badge.svg)](https://github.com/nsaunders/purescript-dotenv/actions/workflows/build.yml) [![purescript-dotenv on Pursuit](https://pursuit.purescript.org/packages/purescript-dotenv/badge)](https://pursuit.purescript.org/packages/purescript-dotenv)
-## Load environment variables from a ```.env``` file.
+# purescript-dotenv [![Build](https://github.com/nsaunders/purescript-dotenv/workflows/CI/badge.svg)](https://github.com/nsaunders/purescript-dotenv/actions/workflows/ci.yml) [![purescript-dotenv on Pursuit](https://pursuit.purescript.org/packages/purescript-dotenv/badge)](https://pursuit.purescript.org/packages/purescript-dotenv)
+## Load environment variables from a `.env` file.
 
 <img src="https://raw.githubusercontent.com/nsaunders/purescript-dotenv/master/img/readme.png" alt="purescript-dotenv" align="right" />
 
-According to [_The Twelve-Factor App_](https://12factor.net/config), configuration should be strictly separated from code and instead defined in environment variables. If you have found this best practice to be inconvenient, then you may want to give ```purescript-dotenv``` a try.
+According to [_The Twelve-Factor App_](https://12factor.net/config), configuration should be strictly separated from code and instead defined in environment variables. If you have found this best practice to be inconvenient in your dev environment, then you may want to give `purescript-dotenv` a try.
 
 By allowing a configuration file to be consumed through the [`purescript-node-process` environment API](https://pursuit.purescript.org/packages/purescript-node-process/7.0.0/docs/Node.Process#v:getEnv), this library enables your application code to leverage environment variables in production while reducing the burden of setting them in development and test environments.
 

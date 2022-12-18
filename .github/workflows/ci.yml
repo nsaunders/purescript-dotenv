@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'examples/**/*.purs'
+      - 'examples/**/*.js'
+      - 'src/**/*.purs'
+      - 'src/**/*.js'
+      - 'test/**/*.purs'
+      - 'test/**/*.js'
+      - '*.json'
+      - '*.dhall'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'examples/**/*.purs'
+      - 'examples/**/*.js'
+      - 'src/**/*.purs'
+      - 'src/**/*.js'
+      - 'test/**/*.purs'
+      - 'test/**/*.js'
+      - '*.json'
+      - '*.dhall'
+      - '.github/workflows/ci.yml'
+
+jobs:
+  build:
+    name: Build
+    
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up a PureScript toolchain
+        uses: purescript-contrib/setup-purescript@main
+        with:
+          purescript: "unstable"
+          purs-tidy: "latest"
+
+      - name: Cache PureScript dependencies
+        uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-spago-${{ hashFiles('**/*.dhall') }}
+          path: |
+            .spago
+            output
+
+      - name: Check formatting
+        run: purs-tidy check examples src test
+
+      - name: Install PureScript dependencies
+        run: spago install
+
+      - name: Build source
+        run: spago build --no-install --purs-args '--censor-lib --strict'
+
+      - name: Run tests
+        run: spago -x test.dhall test
+
+      - name: Build examples
+        run: spago -x example.dhall build
+
+      - name: Verify Bower & Pulp
+        run: |
+          npm install bower pulp@16.0.0-0
+          npx bower install
+          npx pulp build -- --censor-lib --strict
