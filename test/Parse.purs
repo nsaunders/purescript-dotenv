@@ -1,34 +1,41 @@
 module Test.Parse (tests) where
 
 import Prelude
+
 import Data.Either (Either(..))
 import Data.Tuple (Tuple(..))
 import Dotenv.Internal.Parse (settings)
 import Dotenv.Internal.Types (UnresolvedValue(..))
+import Parsing (runParser)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual)
-import Parsing (runParser)
 
 tests :: Spec Unit
 tests = describe "settings (parser)" do
 
   it "skips blank lines" $
     let
-      expected = Right [ Tuple "A" $ LiteralValue "B", Tuple "C" $ LiteralValue "D" ]
+      expected = Right
+        [ Tuple "A" $ LiteralValue "B", Tuple "C" $ LiteralValue "D" ]
       actual = "A=B\n\nC=D" `runParser` settings
     in
       actual `shouldEqual` expected
- 
+
   it "skips commented lines" $
     let
-      expected = Right [ Tuple "A" $ LiteralValue "B", Tuple "C" $ LiteralValue "D" ]
+      expected = Right
+        [ Tuple "A" $ LiteralValue "B", Tuple "C" $ LiteralValue "D" ]
       actual = "# Comment\nA=B\n# Comment\n# Comment\nC=D" `runParser` settings
     in
       actual `shouldEqual` expected
 
   it "skips comments on the same line after a setting" $
     let
-      expected = Right [ Tuple "A" $ LiteralValue "B", Tuple "C" $ LiteralValue "D", Tuple "E" $ LiteralValue "F" ]
+      expected = Right
+        [ Tuple "A" $ LiteralValue "B"
+        , Tuple "C" $ LiteralValue "D"
+        , Tuple "E" $ LiteralValue "F"
+        ]
       actual = "A=B\nC=D # Testing\nE=F" `runParser` settings
     in
       actual `shouldEqual` expected
@@ -85,7 +92,13 @@ tests = describe "settings (parser)" do
   it "parses variable substitutions within unquoted values" $
     let
       expected =
-        Right [ Tuple "A" $ ValueExpression [ LiteralValue "Hi, ", VariableSubstitution "USER", LiteralValue "!" ] ]
+        Right
+          [ Tuple "A" $ ValueExpression
+              [ LiteralValue "Hi, "
+              , VariableSubstitution "USER"
+              , LiteralValue "!"
+              ]
+          ]
       actual = "A=Hi, ${USER}!" `runParser` settings
     in
       actual `shouldEqual` expected
@@ -93,7 +106,13 @@ tests = describe "settings (parser)" do
   it "parses variable substitutions within quoted values" $
     let
       expected =
-        Right [ Tuple "A" $ ValueExpression [ LiteralValue "Hi, ", VariableSubstitution "USER", LiteralValue "!" ] ]
+        Right
+          [ Tuple "A" $ ValueExpression
+              [ LiteralValue "Hi, "
+              , VariableSubstitution "USER"
+              , LiteralValue "!"
+              ]
+          ]
       actual = "A=\"Hi, ${USER}!\"" `runParser` settings
     in
       actual `shouldEqual` expected
@@ -103,8 +122,10 @@ tests = describe "settings (parser)" do
       expected =
         Right
           [ Tuple "A" $ ValueExpression
-            [ LiteralValue "Hello, ", CommandSubstitution "head" ["-n", "1", "user.txt"], LiteralValue "!"
-            ]
+              [ LiteralValue "Hello, "
+              , CommandSubstitution "head" [ "-n", "1", "user.txt" ]
+              , LiteralValue "!"
+              ]
           ]
       actual = "A=Hello, $(head -n 1 user.txt)!" `runParser` settings
     in
@@ -115,8 +136,10 @@ tests = describe "settings (parser)" do
       expected =
         Right
           [ Tuple "A" $ ValueExpression
-            [ LiteralValue "Hello, ", CommandSubstitution "head" ["-n", "1", "user.txt"], LiteralValue "!"
-            ]
+              [ LiteralValue "Hello, "
+              , CommandSubstitution "head" [ "-n", "1", "user.txt" ]
+              , LiteralValue "!"
+              ]
           ]
       actual = "A=\"Hello, $(head -n 1 user.txt)!\"" `runParser` settings
     in

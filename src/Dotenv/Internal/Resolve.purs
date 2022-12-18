@@ -3,6 +3,7 @@
 module Dotenv.Internal.Resolve (resolveValues) where
 
 import Prelude
+
 import Data.Array (unzip, zip)
 import Data.Foldable (find)
 import Data.Maybe (Maybe(..))
@@ -18,7 +19,11 @@ import Run (Run)
 type Resolution r = CHILD_PROCESS (ENVIRONMENT r)
 
 -- | Resolves a value according to its expression.
-resolveValue :: forall r. Array (Setting UnresolvedValue) -> UnresolvedValue -> Run (Resolution r) ResolvedValue
+resolveValue
+  :: forall r
+   . Array (Setting UnresolvedValue)
+  -> UnresolvedValue
+  -> Run (Resolution r) ResolvedValue
 resolveValue settings = case _ of
   LiteralValue value ->
     pure $ Just value
@@ -41,7 +46,10 @@ resolveValue settings = case _ of
     pure $ joinWith "" <$> sequence resolvedValues
 
 -- | Resolves the values within an array of settings.
-resolveValues :: forall r. Array (Setting UnresolvedValue) -> Run (Resolution r) (Array (Setting ResolvedValue))
+resolveValues
+  :: forall r
+   . Array (Setting UnresolvedValue)
+  -> Run (Resolution r) (Array (Setting ResolvedValue))
 resolveValues settings =
   let
     (Tuple names unresolvedValues) = unzip settings

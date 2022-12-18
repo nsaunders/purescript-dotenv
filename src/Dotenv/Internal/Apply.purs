@@ -1,8 +1,9 @@
 -- | This module encapsulates the logic for applying settings to the environment.
 
-module Dotenv.Internal.Apply (applySettings) where 
+module Dotenv.Internal.Apply (applySettings) where
 
 import Prelude
+
 import Data.Maybe (fromMaybe, isJust)
 import Data.Traversable (traverse)
 import Data.Tuple (Tuple(..))
@@ -17,8 +18,7 @@ applySettings
   -> Run (ENVIRONMENT r) (Array (Setting ResolvedValue))
 applySettings = traverse \(Tuple name resolvedValue) -> do
   currentValue <- lookupEnv name
-  if isJust currentValue
-    then pure $ Tuple name currentValue
-    else do
-      when (isJust resolvedValue) (setEnv name $ fromMaybe "" resolvedValue)
-      pure $ Tuple name resolvedValue
+  if isJust currentValue then pure $ Tuple name currentValue
+  else do
+    when (isJust resolvedValue) (setEnv name $ fromMaybe "" resolvedValue)
+    pure $ Tuple name resolvedValue

@@ -1,8 +1,15 @@
 -- | This module encapsulates the logic for running a child process.
 
-module Dotenv.Internal.ChildProcess (CHILD_PROCESS, ChildProcessF(..), _childProcess, handleChildProcess, spawn) where
+module Dotenv.Internal.ChildProcess
+  ( CHILD_PROCESS
+  , ChildProcessF(..)
+  , _childProcess
+  , handleChildProcess
+  , spawn
+  ) where
 
 import Prelude
+
 import Control.Monad.Error.Class (throwError)
 import Data.Maybe (Maybe(Nothing))
 import Effect.Aff (Aff)
@@ -26,7 +33,8 @@ type CHILD_PROCESS r = (childProcess :: ChildProcessF | r)
 -- | The default interpreter for handling a child process
 handleChildProcess :: ChildProcessF ~> Aff
 handleChildProcess (Spawn cmd args callback) = do
-  { stderr, stdout, exit } <- Sunde.spawn { cmd, args, stdin: Nothing } defaultSpawnOptions
+  { stderr, stdout, exit } <- Sunde.spawn { cmd, args, stdin: Nothing }
+    defaultSpawnOptions
   case exit of
     Normally 0 ->
       pure $ callback stdout

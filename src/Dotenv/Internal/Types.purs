@@ -3,6 +3,7 @@
 module Dotenv.Internal.Types (Name, ResolvedValue, Setting, UnresolvedValue(..)) where
 
 import Prelude
+
 import Data.Maybe (Maybe)
 import Data.Tuple (Tuple)
 
@@ -21,7 +22,9 @@ derive instance eqUnresolvedValue :: Eq UnresolvedValue
 instance showUnresolvedValue :: Show UnresolvedValue where
   show (LiteralValue v) = "(LiteralValue \"" <> v <> "\")"
   show (VariableSubstitution v) = "(VariableSubstitution \"" <> v <> "\")"
-  show (CommandSubstitution c a) = "(CommandSubstitution \"" <> c <> " " <> show a <> "\")"
+  show (CommandSubstitution c a) = "(CommandSubstitution \"" <> c <> " "
+    <> show a
+    <> "\")"
   show (ValueExpression vs) = "(ValueExpression " <> show vs <> ")"
 
 -- | The type of a resolved value

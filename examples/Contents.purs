@@ -1,6 +1,7 @@
 module Example.Contents where
 
 import Prelude
+
 import Dotenv (loadContents) as Dotenv
 import Effect (Effect)
 import Effect.Aff (launchAff_)

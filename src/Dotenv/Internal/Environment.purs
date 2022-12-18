@@ -9,6 +9,7 @@ module Dotenv.Internal.Environment
   ) where
 
 import Prelude
+
 import Data.Maybe (Maybe)
 import Effect.Aff (Aff)
 import Effect.Class (liftEffect)

@@ -1,6 +1,7 @@
 module Test.Resolve (tests) where
 
 import Prelude
+
 import Control.Monad.Error.Class (throwError)
 import Data.Foldable (find)
 import Data.Map (Map, lookup, singleton)
@@ -53,7 +54,8 @@ handleChildProcess (Spawn cmd args callback) =
     Just result ->
       pure $ callback result
     Nothing ->
-      throwError $ error ("Unrecognized command: " <> cmd <> " " <> joinWith " " args)
+      throwError $ error
+        ("Unrecognized command: " <> cmd <> " " <> joinWith " " args)
 
 handleEnvironment :: EnvironmentF ~> Aff
 handleEnvironment op =
@@ -63,12 +65,13 @@ handleEnvironment op =
     SetEnv _ _ _ ->
       throwError $ error "The environment was modified while resolving values."
 
-resolve :: Array (Setting UnresolvedValue) -> Aff (Array (Setting ResolvedValue))
+resolve
+  :: Array (Setting UnresolvedValue) -> Aff (Array (Setting ResolvedValue))
 resolve = resolveValues
   >>> interpret
     ( case_
-      # on _childProcess handleChildProcess
-      # on _environment handleEnvironment
+        # on _childProcess handleChildProcess
+        # on _environment handleEnvironment
     )
 
 lookupSetting :: String -> Array (Setting ResolvedValue) -> ResolvedValue
@@ -95,4 +98,5 @@ tests = describe "resolveValues" do
       setting "DB_CRED" `shouldEqual` Just "user:p4s5w0rD!"
 
     it "resolves value expressions recursively" \setting -> do
-      setting "DB_CONNECTION_STRING" `shouldEqual` Just "db://user:p4s5w0rD!@localhost/development"
+      setting "DB_CONNECTION_STRING" `shouldEqual` Just
+        "db://user:p4s5w0rD!@localhost/development"

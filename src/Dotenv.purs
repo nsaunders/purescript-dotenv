@@ -3,6 +3,7 @@
 module Dotenv (Name, Setting, Settings, Value, loadFile, loadContents) where
 
 import Prelude
+
 import Control.Monad.Error.Class (catchError, throwError)
 import Data.Either (either)
 import Data.Maybe (Maybe)
@@ -19,8 +20,8 @@ import Effect.Aff (Aff)
 import Effect.Exception (error)
 import Node.Encoding (Encoding(UTF8))
 import Node.FS.Aff (readTextFile)
-import Run (case_, interpret, on)
 import Parsing (parseErrorMessage, runParser)
+import Run (case_, interpret, on)
 
 -- | The type of a setting name
 type Name = String
@@ -46,18 +47,18 @@ loadContents = parseSettings >=> processSettings
 -- | Reads the `.env` file.
 readDotenv :: Aff String
 readDotenv = (trim <$> readTextFile UTF8 ".env")
-           # flip catchError (const $ pure "")
+  # flip catchError (const $ pure "")
 
 -- | Parses settings, mapping the result to `Aff`.
 parseSettings :: String -> Aff (Array (IT.Setting UnresolvedValue))
 parseSettings = flip runParser Parse.settings
-                >>> either (parseErrorMessage >>> error >>> throwError) pure
+  >>> either (parseErrorMessage >>> error >>> throwError) pure
 
 -- | Processes settings by resolving their values and then applying them to the environment.
 processSettings :: Array (IT.Setting UnresolvedValue) -> Aff Settings
 processSettings = (resolveValues >=> applySettings)
   >>> interpret
     ( case_
-      # on _childProcess handleChildProcess
-      # on _environment handleEnvironment
+        # on _childProcess handleChildProcess
+        # on _environment handleEnvironment
     )

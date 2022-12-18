@@ -1,6 +1,7 @@
 module Example.Validation (main) where
 
 import Prelude
+
 import Data.Either (Either(..), note)
 import Data.Int (fromString) as Int
 import Data.List.Lazy (replicateM)
@@ -23,7 +24,7 @@ readConfig env = { greeting: _, count: _ }
   <*> (value "COUNT" >>= Int.fromString >>> note "COUNT must be an integer.")
 
   where
-    value name = note ("Missing variable " <> name) $ lookup name env
+  value name = note ("Missing variable " <> name) $ lookup name env
 
 main :: Effect Unit
 main = launchAff_ do
