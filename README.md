@@ -11,16 +11,6 @@ Simply place your `.env` configuration file in the root of your project (ensurin
 
 ### Installation
 
-[bower](https://github.com/bower/bower):
-```
-bower install --save purescript-dotenv
-```
-
-[psc-package](https://github.com/purescript/psc-package):
-```
-psc-package install dotenv
-```
-
 [spago](https://github.com/spacchetti/spago):
 ```
 spago install dotenv
