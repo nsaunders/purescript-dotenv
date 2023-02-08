@@ -11,7 +11,7 @@ Simply place your `.env` configuration file in the root of your project (ensurin
 
 ### Installation
 
-[spago](https://github.com/spacchetti/spago):
+via [spago](https://github.com/spacchetti/spago):
 ```
 spago install dotenv
 ```
