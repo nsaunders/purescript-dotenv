@@ -1,7 +1,7 @@
 # purescript-dotenv [![Build](https://github.com/nsaunders/purescript-dotenv/workflows/CI/badge.svg)](https://github.com/nsaunders/purescript-dotenv/actions/workflows/ci.yml) [![Latest release](http://img.shields.io/github/release/nsaunders/purescript-dotenv.svg)](https://github.com/nsaunders/purescript-dotenv/releases) [![PureScript registry](https://img.shields.io/badge/dynamic/json?color=informational&label=registry&query=%24.dotenv.version&url=https%3A%2F%2Fraw.githubusercontent.com%2Fpurescript%2Fpackage-sets%2Fmaster%2Fpackages.json)](https://github.com/purescript/registry) [![purescript-dotenv on Pursuit](https://pursuit.purescript.org/packages/purescript-dotenv/badge)](https://pursuit.purescript.org/packages/purescript-dotenv)
 ## Load environment variables from a `.env` file.
 
-<img src="https://raw.githubusercontent.com/nsaunders/purescript-dotenv/master/meta/img/readme.png" alt="purescript-dotenv" align="right" />
+<img src="https://github.com/nsaunders/purescript-dotenv/raw/master/meta/img/readme.png" alt="purescript-dotenv" align="right" />
 
 According to [_The Twelve-Factor App_](https://12factor.net/config), configuration should be strictly separated from code and instead defined in environment variables. If you have found this best practice to be inconvenient in your dev environment, then you may want to give `purescript-dotenv` a try.
 
