@@ -21,6 +21,7 @@
   , "sunde"
   , "transformers"
   , "tuples"
+  , "typelevel-prelude"
   ]
 , sources = [ "src/**/*.purs" ]
 , packages = ./packages.dhall

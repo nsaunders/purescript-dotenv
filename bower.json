@@ -32,6 +32,7 @@
         "purescript-strings": "^v6.0.0",
         "purescript-sunde": "^v3.0.0",
         "purescript-transformers": "^v6.0.0",
-        "purescript-tuples": "^v7.0.0"
+        "purescript-tuples": "^v7.0.0",
+        "purescript-typelevel-prelude": "^v7.0.0"
     }
 }

@@ -14,16 +14,14 @@ import Dotenv.Internal.ChildProcess (CHILD_PROCESS, spawn)
 import Dotenv.Internal.Environment (ENVIRONMENT, lookupEnv)
 import Dotenv.Internal.Types (ResolvedValue, Setting, UnresolvedValue(..))
 import Run (Run)
-
--- | A row that tracks the effects involved in value resolution
-type Resolution r = CHILD_PROCESS (ENVIRONMENT r)
+import Type.Row (type (+))
 
 -- | Resolves a value according to its expression.
 resolveValue
   :: forall r
    . Array (Setting UnresolvedValue)
   -> UnresolvedValue
-  -> Run (Resolution r) ResolvedValue
+  -> Run (CHILD_PROCESS + ENVIRONMENT + r) ResolvedValue
 resolveValue settings = case _ of
   LiteralValue value ->
     pure $ Just value
@@ -49,7 +47,7 @@ resolveValue settings = case _ of
 resolveValues
   :: forall r
    . Array (Setting UnresolvedValue)
-  -> Run (Resolution r) (Array (Setting ResolvedValue))
+  -> Run (CHILD_PROCESS + ENVIRONMENT + r) (Array (Setting ResolvedValue))
 resolveValues settings =
   let
     (Tuple names unresolvedValues) = unzip settings
