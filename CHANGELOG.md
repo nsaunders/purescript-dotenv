@@ -9,6 +9,7 @@ Breaking changes:
 New features:
 
 Bugfixes:
+- Handling of escaped quotes (#39 by @nsaunders)
 
 Other improvements:
 
