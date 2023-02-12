@@ -4,8 +4,5 @@ in conf // {
   sources = conf.sources # [ "examples/**/*.purs" ],
   dependencies = conf.dependencies # 
     [ "console"
-    , "foreign-object"
-    , "integers" 
-    , "lists"
     ]
 }
