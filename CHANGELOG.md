@@ -7,6 +7,12 @@ Notable changes are documented in this file. The format is based on [Keep a Chan
 Breaking changes:
 - `loadFile` and `loadContents` now return `Aff Unit`. (#40 by @nsaunders)
 
+  > **Note**
+  > Although this is technically a breaking change, existing code that discards the return value will continue to work without modification, e.g.
+  > ```purescript
+  > _ <- loadFile -- Still works, although there is no need to explicitly discard `Unit`.
+  > ```
+
 New features:
 
 Bugfixes:
