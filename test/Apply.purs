@@ -1,63 +1,54 @@
 module Test.Apply (tests) where
 
-import Prelude
+import Prelude hiding (apply)
 
-import Data.Foldable (find)
+import Data.Foldable (lookup) as F
 import Data.Map (Map, insert, lookup, singleton)
 import Data.Maybe (Maybe(..))
-import Data.Tuple (Tuple(..), fst, snd)
-import Dotenv.Internal.Apply (applySettings)
+import Data.Tuple (fst)
+import Data.Tuple.Nested (type (/\), (/\))
+import Dotenv.Internal.Apply (apply)
+import Dotenv.Internal.ChildProcess (ChildProcessF(..), _childProcess)
 import Dotenv.Internal.Environment (EnvironmentF(..), _environment)
-import Dotenv.Internal.Types (ResolvedValue, Setting)
+import Dotenv.Internal.Types (Setting, UnresolvedValue(..))
 import Run (Run, case_, extract, interpret, on)
 import Run.Writer (WRITER, runWriter, tell)
 import Test.Spec (Spec, describe, it)
 import Test.Spec.Assertions (shouldEqual, shouldNotContain)
 
-settings :: Array (Setting ResolvedValue)
-settings = [ Tuple "VAR_ONE" $ Just "one", Tuple "VAR_TWO" $ Just "two" ]
+settings :: Array (Setting UnresolvedValue)
+settings = [ "VAR_ONE" /\ LiteralValue "one", "VAR_TWO" /\ LiteralValue "two" ]
 
 predefinedVariables :: Map String String
 predefinedVariables = singleton "VAR_TWO" "2" # insert "VAR_THREE" "3"
 
+handleChildProcess :: forall m. Monad m => ChildProcessF ~> m
+handleChildProcess (Spawn _ _ callback) = pure $ callback mempty
+
 handleEnvironment
-  :: forall r. EnvironmentF ~> Run (WRITER (Array (Tuple String String)) r)
+  :: forall r. EnvironmentF ~> Run (WRITER (Array (String /\ String)) r)
 handleEnvironment =
   case _ of
     LookupEnv name callback ->
       pure $ callback (lookup name predefinedVariables)
     SetEnv name value next -> do
-      tell [ Tuple name value ]
+      tell [ name /\ value ]
       pure next
 
-applySettingsResult
-  :: Tuple (Array (Tuple String String)) (Array (Setting ResolvedValue))
-applySettingsResult =
-  extract $ runWriter $ interpret (case_ # on _environment handleEnvironment) $
-    applySettings settings
-
-appliedSettings :: Array (Tuple String String)
-appliedSettings = fst applySettingsResult
-
-returnedSettings :: Array (Setting ResolvedValue)
-returnedSettings = snd applySettingsResult
+applied :: Array (String /\ String)
+applied =
+  fst $ extract $ runWriter
+    $ interpret
+        ( case_ # on _childProcess handleChildProcess # on _environment
+            handleEnvironment
+        )
+    $ apply settings
 
 tests :: Spec Unit
-tests = describe "applySettings" do
+tests = describe "apply" do
 
-  it
-    "should apply settings where the environment variable is not already defined"
-    $
-      (snd <$> find (eq "VAR_ONE" <<< fst) appliedSettings) `shouldEqual` Just
-        "one"
+  it "should apply settings where the environment variable is not already set" $
+    F.lookup "VAR_ONE" applied `shouldEqual` Just "one"
 
-  it
-    "should not apply settings where the environment variable is already defined"
-    $
-      (fst <$> appliedSettings) `shouldNotContain` "VAR_TWO"
-
-  it
-    "should return the specified settings with the values defined in the environment as a result"
-    $
-      returnedSettings `shouldEqual`
-        [ Tuple "VAR_ONE" $ Just "one", Tuple "VAR_TWO" $ Just "2" ]
+  it "should not apply settings where the environment variable is already set" $
+    (fst <$> applied) `shouldNotContain` "VAR_TWO"
