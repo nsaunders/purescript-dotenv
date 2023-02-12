@@ -28,7 +28,7 @@ readConfig env = { greeting: _, count: _ }
 
 main :: Effect Unit
 main = launchAff_ do
-  _ <- Dotenv.loadFile
+  Dotenv.loadFile
   liftEffect do
     eitherConfig <- readConfig <$> getEnv
     case eitherConfig of

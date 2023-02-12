@@ -11,5 +11,5 @@ import Node.Process (lookupEnv)
 
 main :: Effect Unit
 main = launchAff_ do
-  _ <- Dotenv.loadContents """GREETING="Hello, Sailor!" """
+  Dotenv.loadContents """GREETING="Hello, Sailor!" """
   liftEffect $ lookupEnv "GREETING" >>= logShow

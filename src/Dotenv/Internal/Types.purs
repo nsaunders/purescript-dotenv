@@ -7,7 +7,7 @@ import Prelude
 import Data.Maybe (Maybe)
 import Data.Tuple (Tuple)
 
--- | The name of a setting
+-- | The name of a setting name
 type Name = String
 
 -- | The expressed value of a setting, which has not been resolved yet
