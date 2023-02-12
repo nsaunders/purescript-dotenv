@@ -54,10 +54,24 @@ tests = describe "settings (parser)" do
     in
       actual `shouldEqual` expected
 
+  it "parses escaped single quotes" $
+    let
+      expected = Right [ Tuple "A" $ LiteralValue "'a'" ]
+      actual = "A='\\'a\\''" `runParser` settings
+    in
+      actual `shouldEqual` expected
+
   it "parses double-quoted values" $
     let
       expected = Right [ Tuple "A" $ LiteralValue "a" ]
       actual = "A=\"a\"" `runParser` settings
+    in
+      actual `shouldEqual` expected
+
+  it "parses escaped double quotes" $
+    let
+      expected = Right [ Tuple "A" $ LiteralValue "\"a\"" ]
+      actual = "A=\"\\\"a\\\"\"" `runParser` settings
     in
       actual `shouldEqual` expected
 

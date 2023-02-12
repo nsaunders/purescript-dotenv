@@ -70,7 +70,7 @@ quotedValue q =
   let
     literal =
       LiteralValue <<< fromCharArray <$> some
-        ( noneOf [ '$', q ] <|> try
+        ( (try $ char '\\' *> char q *> pure q) <|> noneOf [ '$', q ] <|> try
             (char '$' <* notFollowedBy (oneOf [ '{', '(' ]))
         )
   in
