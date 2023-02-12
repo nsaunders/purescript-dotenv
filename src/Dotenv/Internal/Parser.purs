@@ -1,6 +1,6 @@
 -- | This module encapsulates the parsing logic for a `.env` file.
 
-module Dotenv.Internal.Parse where
+module Dotenv.Internal.Parser (parser) where
 
 import Prelude hiding (between)
 
@@ -32,8 +32,8 @@ whitespaceChars :: Array Char
 whitespaceChars = [ ' ', '\t' ]
 
 -- | Parses `.env` settings.
-settings :: Parser String (Array (Setting UnresolvedValue))
-settings = fromFoldable <$> do
+parser :: Parser String (Array (Setting UnresolvedValue))
+parser = fromFoldable <$> do
   skipMany notSetting
   (setting <* many (noneOf newlineChars)) `sepEndBy` skipMany notSetting
   where

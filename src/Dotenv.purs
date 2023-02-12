@@ -12,7 +12,7 @@ import Data.Tuple (Tuple)
 import Dotenv.Internal.Apply (apply)
 import Dotenv.Internal.ChildProcess (_childProcess, handleChildProcess)
 import Dotenv.Internal.Environment (_environment, handleEnvironment)
-import Dotenv.Internal.Parse (settings) as Parse
+import Dotenv.Internal.Parser (parser)
 import Dotenv.Internal.Types (Setting) as IT
 import Dotenv.Internal.Types (UnresolvedValue)
 import Effect.Aff (Aff)
@@ -50,7 +50,7 @@ readDotenv = (trim <$> readTextFile UTF8 ".env")
 
 -- | Parses settings, mapping the result to `Aff`.
 parseSettings :: String -> Aff (Array (IT.Setting UnresolvedValue))
-parseSettings = flip runParser Parse.settings
+parseSettings = flip runParser parser
   >>> either (parseErrorMessage >>> error >>> throwError) pure
 
 -- | Processes settings by resolving their values and then applying them to the environment.
