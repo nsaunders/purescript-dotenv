@@ -5,7 +5,7 @@
 
 According to [_The Twelve-Factor App_](https://12factor.net/config), configuration should be strictly separated from code and instead defined in environment variables. If you have found this best practice to be inconvenient in your dev environment, then you may want to give `purescript-dotenv` a try.
 
-By allowing a configuration file to be consumed through the [`purescript-node-process` environment API](https://pursuit.purescript.org/packages/purescript-node-process/7.0.0/docs/Node.Process#v:getEnv), this library enables your application code to leverage environment variables in production while reducing the burden of setting them in development and test environments.
+By effectively allowing a configuration file to be consumed through the [`purescript-node-process` environment API](https://pursuit.purescript.org/packages/purescript-node-process/7.0.0/docs/Node.Process#v:getEnv), this library enables your application code to leverage environment variables in production while easing the burden of setting them in development and test environments.
 
 Simply place your `.env` configuration file in the root of your project (ensuring for security reasons not to commit it), and then call `Dotenv.loadFile` at the beginning of your program. Environment variable lookups throughout your program will then fall back to the values defined in `.env`.
 
@@ -45,7 +45,7 @@ main = launchAff_ do
 
 ### Configuration Format
 
-The `.env` file may generally define one environment variable setting per line in the format `VARIABLE_NAME=value`. Here is a trivial example:
+The `.env` file may generally define one environment variable setting per line in the format `VARIABLE_NAME=value`. For example:
 
 ```
 EMAIL_FROM=noreply@my.app
@@ -90,7 +90,7 @@ DB_CONN_STR=postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}
 
 #### Command Substitution
 
-The standard output of a command can also be interpolated into a setting value using the `$(command)` syntax. The following example differs from the variable substitution example above by interpolating the output of the [`whoami`](http://man7.org/linux/man-pages/man1/whoami.1.html) command into the database connection string instead of a `DB_USER` setting:
+The standard output of a command can also be interpolated into a setting value using the `$(command)` syntax. In the following example, the output of the [`whoami`](http://man7.org/linux/man-pages/man1/whoami.1.html) command is interpolated into the database connection string:
 
 ```
 DB_HOST=127.0.0.1
@@ -100,11 +100,11 @@ DB_CONN_STR=postgresql://$(whoami):${DB_PASS}@${DB_HOST}/${DB_NAME}
 
 #### Additional Parsing Rules
 
-For a complete specification of parsing rules, please see the [parser tests](test/Parse.purs).
+For a complete specification of parsing rules, please see the [parser tests](test/Parser.purs).
 
 ### Examples
 
-To run the examples, clone the repository and run one of the following depending on your package manager and build tool, replacing `<example-name>` with the name of one of the [examples](example).
+To run the [examples](./examples), clone the repository and run one of the following depending on your package manager and build tool, replacing `<example-name>` with the name of one of the examples.
 
 [spago](https://github.com/spacchetti/spago):
 ```
