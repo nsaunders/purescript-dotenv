@@ -37,13 +37,11 @@ Finally, call the `loadFile` function from your `main` function before the rest 
 ```purescript
 main :: Effect Unit
 main = launchAff_ do
-  _ <- Dotenv.loadFile
+  Dotenv.loadFile
   liftEffect do
     testVar <- lookupEnv "TEST_VAR"
     logShow testVar
 ```
-
-For a complete example, see [example/Basic.purs](example/Basic.purs) and the corresponding [.env file](.env).
 
 ### Configuration Format
 
