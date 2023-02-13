@@ -9,6 +9,7 @@
   , "either"
   , "exceptions"
   , "foldable-traversable"
+  , "lists"
   , "maybe"
   , "node-buffer"
   , "node-child-process"

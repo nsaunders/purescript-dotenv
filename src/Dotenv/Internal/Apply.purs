@@ -4,7 +4,6 @@ module Dotenv.Internal.Apply (apply) where
 
 import Prelude
 
-import Data.Array (filter) as A
 import Data.Maybe (isNothing)
 import Data.Traversable (for_, traverse_)
 import Data.Tuple.Nested ((/\))
@@ -24,6 +23,5 @@ apply settings =
   for_ settings \(name /\ unresolvedValue) -> do
     currentValue <- lookupEnv name
     when (isNothing currentValue) do
-      maybeValue <- resolve (A.filter (\(name' /\ _) -> name /= name') settings)
-        unresolvedValue
+      maybeValue <- resolve settings (pure name) unresolvedValue
       traverse_ (setEnv name) maybeValue

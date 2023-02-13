@@ -3,11 +3,10 @@ module Test.Resolve (tests) where
 import Prelude
 
 import Control.Monad.Error.Class (throwError)
-import Data.Array as A
+import Data.Foldable (lookup) as F
 import Data.Map (Map, lookup, singleton)
 import Data.Maybe (Maybe(..))
 import Data.String.Common (joinWith)
-import Data.Tuple (snd)
 import Data.Tuple.Nested (type (/\), (/\))
 import Dotenv.Internal.ChildProcess (ChildProcessF(..), _childProcess)
 import Dotenv.Internal.Environment (EnvironmentF(..), _environment)
@@ -41,6 +40,14 @@ configuration =
         , LiteralValue "/"
         , VariableSubstitution "DB_NAME"
         ]
+  , "SELF_REFERENCING" /\ ValueExpression
+      [ LiteralValue ".", VariableSubstitution "SELF_REFERENCING" ]
+  , "CIRCULAR_REF_A" /\ ValueExpression
+      [ LiteralValue ".", VariableSubstitution "CIRCULAR_REF_B" ]
+  , "CIRCULAR_REF_B" /\ ValueExpression
+      [ LiteralValue ".", VariableSubstitution "CIRCULAR_REF_C" ]
+  , "CIRCULAR_REF_C" /\ ValueExpression
+      [ LiteralValue ".", VariableSubstitution "CIRCULAR_REF_A" ]
   ]
 
 commands :: Map (String /\ Array String) String
@@ -68,19 +75,16 @@ handleEnvironment op =
 
 resolve' :: String -> Aff ResolvedValue
 resolve' name =
-  case snd <$> A.find (\(name' /\ _) -> name == name') configuration of
+  case F.lookup name configuration of
     Nothing ->
       pure Nothing
     Just unresolvedValue ->
-      let
-        others = A.filter (\(name' /\ _) -> name /= name') configuration
-      in
-        resolve others unresolvedValue
-          # interpret
-              ( case_
-                  # on _childProcess handleChildProcess
-                  # on _environment handleEnvironment
-              )
+      resolve configuration (pure name) unresolvedValue
+        # interpret
+            ( case_
+                # on _childProcess handleChildProcess
+                # on _environment handleEnvironment
+            )
 
 tests :: Spec Unit
 tests = describe "resolve" do
@@ -108,3 +112,11 @@ tests = describe "resolve" do
   it "resolves value expressions recursively" do
     resolved <- resolve' "DB_CONNECTION_STRING"
     resolved `shouldEqual` Just "db://user:p4s5w0rD!@localhost/development"
+
+  it "does not allow self-referencing variables" do
+    resolved <- resolve' "SELF_REFERENCING"
+    resolved `shouldEqual` Nothing
+
+  it "does not allow circular references" do
+    resolved <- resolve' "CIRCULAR_REF_A"
+    resolved `shouldEqual` Nothing
