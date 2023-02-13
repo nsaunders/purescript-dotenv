@@ -5,6 +5,16 @@ Notable changes are documented in this file. The format is based on [Keep a Chan
 ## [Unreleased]
 
 Breaking changes:
+
+New features:
+
+Bugfixes:
+
+Other improvements:
+
+## [4.0.0] - 2023-02-13
+
+Breaking changes:
 - `loadFile` and `loadContents` now return `Aff Unit`. (#40 by @nsaunders)
 
   > **Note**
@@ -12,8 +22,6 @@ Breaking changes:
   > ```purescript
   > _ <- loadFile -- Still works, although there is no need to explicitly discard `Unit`.
   > ```
-
-New features:
 
 Bugfixes:
 - Handling of escaped quotes (#39 by @nsaunders)
