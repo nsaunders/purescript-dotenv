@@ -17,6 +17,7 @@ New features:
 
 Bugfixes:
 - Handling of escaped quotes (#39 by @nsaunders)
+- Circular references are now short-circuited. (#41 by @nsaunders)
 
 Other improvements:
 - Unused values are no longer resolved. (#40 by @nsaunders)
