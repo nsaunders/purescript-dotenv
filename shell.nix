@@ -1,6 +1,6 @@
 let
   pkgs = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/21.11.tar.gz";
+    url = "https://github.com/NixOS/nixpkgs/archive/23.05.tar.gz";
   }) {};
 
   # To update to a newer version of easy-purescript-nix:
@@ -10,8 +10,8 @@ let
   pursPkgs = import (pkgs.fetchFromGitHub {
     owner = "justinwoo";
     repo = "easy-purescript-nix";
-    rev = "ee51a6d459b8fecfcb10f24ca9728e649c6a9e00";
-    sha256 = "1w4k6mcayyg6388na0cca5qx94sm99xn3na26x2w34jlyz3bwl3m";
+    rev = "5dcea83eecb56241ed72e3631d47e87bb11e45b9";
+    sha256 = "1diwnyj247bsyhgymprpc0cdxkkzdvnxx4s2kw2fiig6xkcb4jwd";
   }) {inherit pkgs;};
 in
   pkgs.stdenv.mkDerivation {
@@ -22,7 +22,7 @@ in
       pulp
       purs-tidy
 
-      pkgs.nodejs-16_x
       pkgs.nodePackages.bower
+      pkgs.nodejs_18
     ];
   }

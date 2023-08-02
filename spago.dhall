@@ -13,7 +13,7 @@
   , "maybe"
   , "node-buffer"
   , "node-child-process"
-  , "node-fs-aff"
+  , "node-fs"
   , "node-process"
   , "parsing"
   , "prelude"
