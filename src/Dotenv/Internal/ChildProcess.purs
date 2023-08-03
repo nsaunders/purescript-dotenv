@@ -11,12 +11,20 @@ module Dotenv.Internal.ChildProcess
 import Prelude
 
 import Control.Monad.Error.Class (throwError)
-import Data.Maybe (Maybe(Nothing))
-import Effect.Aff (Aff)
+import Data.Either (Either(..))
+import Data.Maybe (Maybe(..))
+import Effect.Aff (Aff, effectCanceler, makeAff)
 import Effect.Exception (error)
-import Node.ChildProcess (Exit(..), defaultSpawnOptions)
+import Effect.Ref as Ref
+import Node.ChildProcess (errorH, exitH)
+import Node.ChildProcess as CP
+import Node.ChildProcess.Types (Exit(..), KillSignal, stringSignal)
+import Node.Encoding (Encoding(..))
+import Node.Errors.SystemError as OS
+import Node.EventEmitter (on_)
+import Node.Stream (onDataString)
+import Node.Stream as NS
 import Run (Run, lift)
-import Sunde (spawn) as Sunde
 import Type.Proxy (Proxy(..))
 
 -- | A data type representing the supported operations
@@ -33,8 +41,7 @@ type CHILD_PROCESS r = (childProcess :: ChildProcessF | r)
 -- | The default interpreter for handling a child process
 handleChildProcess :: ChildProcessF ~> Aff
 handleChildProcess (Spawn cmd args callback) = do
-  { stderr, stdout, exit } <- Sunde.spawn { cmd, args, stdin: Nothing }
-    defaultSpawnOptions
+  { stderr, stdout, exit } <- spawn_ { cmd, args, stdin: Nothing }
   case exit of
     Normally 0 ->
       pure $ callback stdout
@@ -46,3 +53,52 @@ handleChildProcess (Spawn cmd args callback) = do
 -- | Constructs the value used to spawn a child process.
 spawn :: forall r. String -> Array String -> Run (CHILD_PROCESS r) String
 spawn cmd args = lift _childProcess (Spawn cmd args identity)
+
+-- Following adapted from https://github.com/justinwoo/purescript-sunde/blob/master/src/Sunde.purs
+
+spawn_
+  :: { cmd :: String, args :: Array String, stdin :: Maybe String }
+  -> Aff
+       { stdout :: String
+       , stderr :: String
+       , exit :: Exit
+       }
+spawn_ = spawn' UTF8 (stringSignal "SIGTERM")
+
+spawn'
+  :: Encoding
+  -> KillSignal
+  -> { cmd :: String, args :: Array String, stdin :: Maybe String }
+  -> Aff
+       { stdout :: String
+       , stderr :: String
+       , exit :: Exit
+       }
+spawn' encoding killSignal { cmd, args, stdin } = makeAff \cb -> do
+  stdoutRef <- Ref.new ""
+  stderrRef <- Ref.new ""
+
+  process <- CP.spawn cmd args
+
+  case stdin of
+    Just input -> do
+      let write = CP.stdin process
+      void $ NS.writeString write UTF8 input \_ -> do
+        NS.end write (\_ -> mempty)
+    Nothing -> pure unit
+
+  onDataString (CP.stdout process) encoding \string ->
+    Ref.modify_ (_ <> string) stdoutRef
+
+  onDataString (CP.stderr process) encoding \string ->
+    Ref.modify_ (_ <> string) stderrRef
+
+  process # on_ errorH \err ->
+    cb $ Left $ OS.toError err
+
+  process # on_ exitH \exit -> do
+    stdout <- Ref.read stdoutRef
+    stderr <- Ref.read stderrRef
+    cb <<< pure $ { stdout, stderr, exit }
+
+  pure <<< effectCanceler <<< void $ CP.kill' killSignal process
