@@ -12,6 +12,11 @@ Bugfixes:
 
 Other improvements:
 
+## [4.0.1] - 2023-08-03
+
+Other improvements:
+- Dependency updates due to Node library changes. ([e6b7a5b](https://github.com/nsaunders/purescript-dotenv/commit/e6b7a5becadf97d9a7b741d3421ba567cfc17905), [57bde7a](https://github.com/nsaunders/purescript-dotenv/commit/57bde7a806a29a233367d66aee1dedb8bdeb565b), [a1ecc94](https://github.com/nsaunders/purescript-dotenv/commit/a1ecc941a005bfe2a4a2018d3c88c8877fe7b87e) by @nsaunders)
+
 ## [4.0.0] - 2023-02-13
 
 Breaking changes:
