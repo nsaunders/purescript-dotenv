@@ -1,42 +1,48 @@
 {
-    "name": "purescript-dotenv",
-    "license": [
-        "MIT"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/nsaunders/purescript-dotenv.git"
-    },
-    "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "output"
-    ],
-    "dependencies": {
-        "purescript-aff": "^v7.1.0",
-        "purescript-arrays": "^v7.2.1",
-        "purescript-control": "^v6.0.0",
-        "purescript-effect": "^v4.0.0",
-        "purescript-either": "^v6.1.0",
-        "purescript-exceptions": "^v6.0.0",
-        "purescript-foldable-traversable": "^v6.0.0",
-        "purescript-lists": "^v7.0.0",
-        "purescript-maybe": "^v6.0.0",
-        "purescript-node-buffer": "^v9.0.0",
-        "purescript-node-child-process": "^v11.0.0",
-        "purescript-node-event-emitter": "https://github.com/purescript-node/purescript-node-event-emitter.git#v3.0.0",
-        "purescript-node-fs": "^v9.1.0",
-        "purescript-node-os": "^v5.1.0",
-        "purescript-node-process": "^v11.2.0",
-        "purescript-node-streams": "^v7.0.0",
-        "purescript-parsing": "^v10.2.0",
-        "purescript-prelude": "^v6.0.1",
-        "purescript-refs": "^v6.0.0",
-        "purescript-run": "^v5.0.0",
-        "purescript-strings": "^v6.0.1",
-        "purescript-transformers": "^v6.0.0",
-        "purescript-tuples": "^v7.0.0",
-        "purescript-typelevel-prelude": "^v7.0.0"
-    }
+  "name": "purescript-dotenv",
+  "license": [
+    "MIT"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nsaunders/purescript-dotenv.git"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-aff": "^v7.1.0",
+    "purescript-arrays": "^v7.2.1",
+    "purescript-control": "^v6.0.0",
+    "purescript-effect": "^v4.0.0",
+    "purescript-either": "^v6.1.0",
+    "purescript-exceptions": "^v6.0.0",
+    "purescript-foldable-traversable": "^v6.0.0",
+    "purescript-lists": "^v7.0.0",
+    "purescript-maybe": "^v6.0.0",
+    "purescript-node-buffer": "^v9.0.0",
+    "purescript-node-child-process": "^v11.0.0",
+    "purescript-node-event-emitter": "https://github.com/purescript-node/purescript-node-event-emitter.git#v3.0.0",
+    "purescript-node-fs": "^v9.1.0",
+    "purescript-node-os": "^v5.1.0",
+    "purescript-node-process": "^v11.2.0",
+    "purescript-node-streams": "^v7.0.0",
+    "purescript-parsing": "^v10.2.0",
+    "purescript-prelude": "^v6.0.1",
+    "purescript-refs": "^v6.0.0",
+    "purescript-run": "^v5.0.0",
+    "purescript-strings": "^v6.0.1",
+    "purescript-transformers": "^v6.0.0",
+    "purescript-tuples": "^v7.0.0",
+    "purescript-typelevel-prelude": "^v7.0.0"
+  },
+  "resolutions": {
+    "purescript-node-buffer": "^v9.0.0",
+    "purescript-node-streams": "^v7.0.0",
+    "purescript-node-child-process": "^v11.0.0",
+    "purescript-node-fs": "^v9.1.0"
+  }
 }
