@@ -12,6 +12,12 @@ Bugfixes:
 
 Other improvements:
 
+## [4.0.3] - 2023-08-05
+
+Bugfixes:
+
+- Updates to child process handling based on new `node-streams` API. ([8b4f30d](https://github.com/nsaunders/purescript-dotenv/commit/8b4f30db42103d3ce38f6bc2df5db36eee188ee4))
+
 ## [4.0.2] - 2023-08-05
 
 Other improvements:
