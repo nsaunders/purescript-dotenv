@@ -14,6 +14,7 @@ import Control.Monad.Error.Class (throwError)
 import Data.Either (Either(..))
 import Data.Maybe (Maybe(..))
 import Effect.Aff (Aff, effectCanceler, makeAff)
+import Effect.Class (liftEffect)
 import Effect.Exception (error)
 import Effect.Ref as Ref
 import Node.ChildProcess (errorH, exitH)
@@ -22,8 +23,7 @@ import Node.ChildProcess.Types (Exit(..), KillSignal, stringSignal)
 import Node.Encoding (Encoding(..))
 import Node.Errors.SystemError as OS
 import Node.EventEmitter (on_)
-import Node.Stream (onDataString)
-import Node.Stream as NS
+import Node.Stream (dataHStr, setEncoding)
 import Run (Run, lift)
 import Type.Proxy (Proxy(..))
 
@@ -74,23 +74,18 @@ spawn'
        , stderr :: String
        , exit :: Exit
        }
-spawn' encoding killSignal { cmd, args, stdin } = makeAff \cb -> do
+spawn' encoding killSignal { cmd, args } = makeAff \cb -> do
   stdoutRef <- Ref.new ""
   stderrRef <- Ref.new ""
 
   process <- CP.spawn cmd args
 
-  case stdin of
-    Just input -> do
-      let write = CP.stdin process
-      void $ NS.writeString write UTF8 input \_ -> do
-        NS.end write (\_ -> mempty)
-    Nothing -> pure unit
-
-  onDataString (CP.stdout process) encoding \string ->
+  liftEffect $ setEncoding (CP.stdout process) encoding
+  CP.stdout process # on_ dataHStr \string ->
     Ref.modify_ (_ <> string) stdoutRef
 
-  onDataString (CP.stderr process) encoding \string ->
+  liftEffect $ setEncoding (CP.stderr process) encoding
+  CP.stderr process # on_ dataHStr \string ->
     Ref.modify_ (_ <> string) stderrRef
 
   process # on_ errorH \err ->

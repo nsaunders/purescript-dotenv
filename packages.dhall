@@ -7,3 +7,4 @@ in  upstream
   with node-child-process.version = "v11.0.0"
   with node-fs.version = "v9.1.0"
   with node-process.version = "v11.2.0"
+  with node-streams.version = "v9.0.0"
