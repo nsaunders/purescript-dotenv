@@ -10,6 +10,8 @@ New features:
 
 Bugfixes:
 
+- Empty values (`A=`, `A=""`, `A=''`) are now parsed as the empty string instead of failing to parse.
+
 Other improvements:
 
 ## [4.0.3] - 2023-08-05
