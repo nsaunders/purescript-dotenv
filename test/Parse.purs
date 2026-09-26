@@ -160,3 +160,10 @@ tests = describe "parser" do
       actual = runParser "A=\"Hello, $(head -n 1 user.txt)!\"" parser
     in
       actual `shouldEqual` expected
+
+  it "parses an empty value as the empty string" $
+    let
+      expected = Right [ "A" /\ LiteralValue "" ]
+      actual = runParser "A=" parser
+    in
+      actual `shouldEqual` expected

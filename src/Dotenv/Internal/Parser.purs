@@ -76,7 +76,7 @@ quotedValue q =
   in
     valueFromValues <$>
       ( char q
-          *> (some $ variableSubstitution <|> commandSubstitution <|> literal)
+          *> (many $ variableSubstitution <|> commandSubstitution <|> literal)
           <* char q
       )
 
@@ -97,12 +97,13 @@ unquotedValue =
   in
     valueFromValues <$>
       ( whiteSpace *>
-          (some $ variableSubstitution <|> commandSubstitution <|> literal)
+          (many $ variableSubstitution <|> commandSubstitution <|> literal)
       )
 
 -- | Assembles a single value from a series of values.
 valueFromValues :: Array UnresolvedValue -> UnresolvedValue
 valueFromValues v
+  | length v == 0 = LiteralValue ""
   | length v == 1 = fromMaybe (ValueExpression []) (head v)
   | otherwise = ValueExpression v
 
