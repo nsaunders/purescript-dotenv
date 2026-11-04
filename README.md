@@ -108,7 +108,8 @@ To run the [examples](./examples), clone the repository and run one of the follo
 
 [spago](https://github.com/spacchetti/spago):
 ```
-spago run -p example/<example-name>.purs -m Example.<example-name>
+spago build --purs-args 'examples/**/*.purs'
+node --input-type=module -e "import { main } from './output/Example.<example-name>/index.js'; main();"
 ```
 
 ### Other ```dotenv``` implementations
