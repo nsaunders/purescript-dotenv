@@ -37,4 +37,5 @@ package:
       - console: ">=6.0.0 <7.0.0"
       - ordered-collections: ">=3.0.0 <4.0.0"
       - spec: ">=7.5.4 <9.0.0"
+      - spec-node: ">=0.0.3 <0.0.4"
 workspace: {}
