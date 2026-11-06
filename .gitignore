@@ -8,4 +8,6 @@
 /.purs*
 /.psa*
 /.spago
+/.spec-results
 *.swp
+/spago.lock
